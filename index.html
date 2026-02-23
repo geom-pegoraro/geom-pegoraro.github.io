@@ -586,6 +586,112 @@
   .hero-desc{ animation: up 0.45s ease both 0.21s; }
   .btn      { animation: up 0.45s ease both 0.29s; }
   .kpis     { animation: up 0.45s ease both 0.37s; }
+
+  /* ── OVERLAY DI STATO ── */
+  #form-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(10, 12, 18, 0.96);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 28px;
+    padding: 32px;
+    text-align: center;
+  }
+  #form-overlay.active { display: flex; }
+
+  .ov-seal {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px solid var(--border2);
+    padding: 6px 18px;
+    border-radius: 2px;
+  }
+  .ov-spinner {
+    width: 44px; height: 44px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1.1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .ov-title {
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.02em;
+    max-width: 520px;
+    line-height: 1.5;
+  }
+  .ov-subtitle {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    max-width: 440px;
+    line-height: 1.9;
+  }
+  .ov-progress-wrap {
+    width: 280px; height: 2px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .ov-progress-bar {
+    height: 100%;
+    background: var(--red);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 2px;
+  }
+  .ov-check {
+    width: 54px; height: 54px;
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    color: var(--green);
+    animation: up 0.4s ease both;
+  }
+  .ov-date {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    max-width: 400px;
+    line-height: 1.9;
+  }
+  .ov-error-icon {
+    width: 54px; height: 54px;
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    color: var(--red);
+  }
+  .ov-btn-back {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red-b);
+    border-radius: var(--r);
+    padding: 11px 28px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.16s;
+    margin-top: 8px;
+  }
+  .ov-btn-back:hover { background: var(--red-s); }
+  button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -720,11 +826,7 @@
     <div class="label-tag">§ 05 — Modulo di Commissione</div>
     <h2>Invia la tua Commessa</h2>
 
-    <form action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
-      <!-- CAMPI OBBLIGATORI WEB3FORMS -->
-      <input type="hidden" name="access_key" value="453b603a-624f-4edb-b64c-ff97cc92e979">
-      <input type="hidden" name="from_name" value="Geom. Pegoraro Alex — Tavole Sinotiche">
-      <input type="hidden" name="subject" value="Nuova Commessa Ricevuta">
+    <form id="commessa-form">
 
       <div class="form-grid">
 
@@ -793,7 +895,7 @@
         </div>
 
         <div class="submit-row">
-          <button type="submit">Invia Commissione →</button>
+          <button type="submit" id="submit-btn">Invia Commissione →</button>
           <div class="submit-hint">
             Riceverai la parcella entro 48h via mail.<br>
             Consegna entro 24h lavorative dal saldo ricevuto.
@@ -805,6 +907,50 @@
     </form>
 
   </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     OVERLAY DI STATO — Caricamento / Successo / Errore
+     ───────────────────────────────────────────── -->
+<div id="form-overlay">
+
+  <!-- STATO: CARICAMENTO -->
+  <div id="ov-loading">
+    <div class="ov-seal">Trasmissione Sicura · Dossier Riservato</div>
+    <div class="ov-spinner"></div>
+    <div class="ov-title">Trasferimento dell'essenza in corso...<br>Non interrompere la connessione con il Tribunale.</div>
+    <div class="ov-progress-wrap">
+      <div class="ov-progress-bar" id="ov-bar"></div>
+    </div>
+    <div class="ov-subtitle" id="ov-loading-detail">Preparazione pacchetto documentale…</div>
+  </div>
+
+  <!-- STATO: SUCCESSO -->
+  <div id="ov-success" style="display:none; flex-direction:column; align-items:center; gap:24px;">
+    <div class="ov-seal">Protocollazione Completata</div>
+    <div class="ov-check">✓</div>
+    <div class="ov-title">Dossier ricevuto e registrato nel sistema.</div>
+    <div class="ov-subtitle">
+      La mole documentale trasmessa è stata acquisita nella sua interezza: ogni elemento fornito è necessario e funzionale all'istruttoria tecnica del caso.<br><br>
+      Riceverai conferma e parcella all'indirizzo e-mail indicato entro <strong style="color:var(--text)">48 ore lavorative</strong>.
+    </div>
+    <div class="ov-date" id="ov-protocol">
+      Ref. dossier: —<br>
+      Data deposito: —
+    </div>
+  </div>
+
+  <!-- STATO: ERRORE -->
+  <div id="ov-error" style="display:none; flex-direction:column; align-items:center; gap:20px;">
+    <div class="ov-seal">Trasmissione Interrotta</div>
+    <div class="ov-error-icon">✕</div>
+    <div class="ov-title">Connessione con il Tribunale persa.</div>
+    <div class="ov-subtitle" id="ov-error-detail">
+      Si è verificato un errore durante la trasmissione. Verificare la connessione di rete e riprovare.
+    </div>
+    <button class="ov-btn-back" onclick="closeOverlay()">← Torna al Modulo</button>
+  </div>
+
 </div>
 
 <!-- FOOTER -->
@@ -827,4 +973,146 @@
 </footer>
 
 <!-- SOLO JavaScript UI non critico — nessun intercetto del submit -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></scri
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIGURAZIONE — sostituisci con il tuo URL
+  // ─────────────────────────────────────────────
+  const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyzy3ScGEmoCptis45wsLx4A4LrumABO7p-6zeiU3zSYBUTHeTyjiyGS6Y_4oizgpTuig/exec';
+
+  // ─────────────────────────────────────────────
+  // HELPER: legge un file come Base64
+  // ─────────────────────────────────────────────
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(new Error('Lettura file fallita'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ─────────────────────────────────────────────
+  // OVERLAY helpers
+  // ─────────────────────────────────────────────
+  function showOverlay(state) {
+    const overlay = document.getElementById('form-overlay');
+    overlay.classList.add('active');
+    document.getElementById('ov-loading').style.display = (state === 'loading') ? 'flex'  : 'none';
+    document.getElementById('ov-success').style.display = (state === 'success') ? 'flex'  : 'none';
+    document.getElementById('ov-error').style.display   = (state === 'error')   ? 'flex'  : 'none';
+  }
+
+  function closeOverlay() {
+    document.getElementById('form-overlay').classList.remove('active');
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('ov-bar').style.width = '0%';
+    document.getElementById('ov-loading-detail').textContent = 'Preparazione pacchetto documentale…';
+  }
+
+  function setProgress(pct, label) {
+    document.getElementById('ov-bar').style.width = pct + '%';
+    if (label) document.getElementById('ov-loading-detail').textContent = label;
+  }
+
+  // ─────────────────────────────────────────────
+  // SUBMIT handler
+  // ─────────────────────────────────────────────
+  document.getElementById('commessa-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form   = e.target;
+    const btn    = document.getElementById('submit-btn');
+    const fileEl = document.getElementById('file-allegato');
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    btn.disabled = true;
+    showOverlay('loading');
+    setProgress(5, 'Lettura documentale in corso…');
+
+    // 1. Leggi il file come Base64
+    let attachmentBase64 = null;
+    let attachmentName   = null;
+    let attachmentSize   = null;
+
+    if (fileEl.files && fileEl.files[0]) {
+      const file = fileEl.files[0];
+      attachmentName = file.name;
+      attachmentSize = file.size;
+      try {
+        setProgress(20, 'Codifica pacchetto dati…');
+        attachmentBase64 = await fileToBase64(file);
+        setProgress(55, 'Autenticazione crittografica completata…');
+      } catch (err) {
+        document.getElementById('ov-error-detail').textContent =
+          'Impossibile leggere il file allegato. Verificare che il file non sia corrotto e riprovare.';
+        showOverlay('error');
+        return;
+      }
+    }
+
+    // 2. Costruisci il payload JSON
+    const payload = {
+      nome:               document.getElementById('nome').value.trim(),
+      cognome:            document.getElementById('cognome').value.trim(),
+      telefono:           document.getElementById('telefono').value.trim(),
+      email:              document.getElementById('email').value.trim(),
+      note:               document.getElementById('note').value.trim(),
+      accetto_disclaimer: document.getElementById('chk1').checked,
+      file_sovrapponibili:document.getElementById('chk2').checked,
+      accetto_privacy:    document.getElementById('chk3').checked,
+      attachment: {
+        name:   attachmentName,
+        size:   attachmentSize,
+        base64: attachmentBase64
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    setProgress(70, 'Trasmissione cifrata al registro…');
+
+    // 3. Invia al Google Apps Script
+    try {
+      const response = await fetch(GAS_ENDPOINT, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+
+      setProgress(95, 'Verifica dell\'integrità del dossier…');
+
+      if (!response.ok) {
+        throw new Error(`Risposta server: ${response.status} ${response.statusText}`);
+      }
+
+      setProgress(100, 'Archiviazione completata.');
+
+      // Breve pausa estetica prima del successo
+      await new Promise(r => setTimeout(r, 600));
+
+      // Aggiorna il pannello successo con riferimento e data
+      const ref  = 'PEG-' + Date.now().toString(36).toUpperCase();
+      const data = new Date().toLocaleString('it-IT', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+      document.getElementById('ov-protocol').innerHTML =
+        `Ref. dossier: <strong style="color:var(--text)">${ref}</strong><br>` +
+        `Data deposito: ${data}`;
+
+      showOverlay('success');
+      form.reset();
+
+    } catch (err) {
+      console.error('Errore invio:', err);
+      document.getElementById('ov-error-detail').textContent =
+        err.message || 'Errore di rete. Verificare la connessione e riprovare.';
+      showOverlay('error');
+    }
+  });
+</script>
+</body>
+</html>
