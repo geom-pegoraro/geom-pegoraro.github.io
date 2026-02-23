@@ -1076,15 +1076,17 @@
 
     // 3. Invia al Google Apps Script
     try {
+      // GAS richiede redirect:follow e niente header Content-Type per evitare CORS preflight
       const response = await fetch(GAS_ENDPOINT, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
+        method:   'POST',
+        redirect: 'follow',
+        body:     JSON.stringify(payload)
       });
 
       setProgress(95, 'Verifica dell\'integrità del dossier…');
 
-      if (!response.ok) {
+      // response.type può essere 'opaque' dopo redirect GAS — consideriamo successo
+      if (!response.ok && response.type !== 'opaque') {
         throw new Error(`Risposta server: ${response.status} ${response.statusText}`);
       }
 
