@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geom. Pegoraro Alex — DWG → BIM & Rendering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117; --bg2: #161b26; --bg3: #1c2233;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --text: #dde4f0; --muted: #6e7d96; --dim: #3d4a5e;
+    --acc: #1a5fa8; --acc-s: rgba(26,95,168,0.10); --acc-b: rgba(26,95,168,0.30);
+    --acc2: #3a9bd4; --acc2-s: rgba(58,155,212,0.09); --acc2-b: rgba(58,155,212,0.28);
+    --render: #1a7a5e; --render-s: rgba(26,122,94,0.10); --render-b: rgba(26,122,94,0.30);
+    --render2: #22c9a0;
+    --font: 'Inter', sans-serif; --mono: 'DM Mono', monospace; --r: 3px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-weight: 400; font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  #bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 0 22px; position: relative; z-index: 1; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; color: #fff; }
+  h2 { font-size: clamp(1.2rem, 2.2vw, 1.55rem); font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 24px; }
+  header { position: relative; z-index: 1; border-bottom: 1px solid var(--border); padding: 17px 0; }
+  .hdr { max-width: 840px; margin: 0 auto; padding: 0 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .hdr-name { font-size: 0.9rem; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+  .hdr-sub { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+  .hdr-back { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--acc2); border: 1px solid var(--acc-b); background: var(--acc-s); padding: 5px 13px; border-radius: 2px; text-decoration: none; transition: background 0.15s; }
+  .hdr-back:hover { background: rgba(26,95,168,0.2); }
+  .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
+  .hero-eye { font-family: var(--mono); font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--acc2); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .hero-eye::before { content: ''; display: block; width: 26px; height: 1px; background: var(--acc2); flex-shrink: 0; }
+  .hero h1 { margin-bottom: 20px; }
+  .hero h1 .ca { color: var(--acc); }
+  .hero h1 .ca2 { color: var(--render2); }
+  .hero-desc { font-size: 0.97rem; color: var(--muted); max-width: 500px; line-height: 1.8; margin-bottom: 36px; }
+  .btn { display: inline-block; background: var(--acc); color: #fff; text-decoration: none; padding: 13px 28px; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; border-radius: var(--r); border: 1px solid var(--acc); transition: background 0.16s, color 0.16s; cursor: pointer; font-family: var(--font); }
+  .btn:hover { background: transparent; color: var(--acc2); border-color: var(--acc2); }
+  .kpis { margin-top: 52px; padding-top: 36px; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .kpi { border-left: 1px solid var(--border); padding-left: 18px; }
+  .kpi-v { font-size: 2rem; font-weight: 600; color: #fff; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+  .kpi-l { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .sec { padding: 52px 0; border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
+  /* Tabs */
+  .tab-row { display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 32px; }
+  .tab-btn { flex: 1; background: var(--bg2); border: none; border-right: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 10px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active-render { background: var(--render-s); color: var(--render2); border-bottom: 2px solid var(--render); }
+  .tab-btn.active-bim { background: var(--acc-s); color: var(--acc2); border-bottom: 2px solid var(--acc); }
+  .plan-panel { display: none; }
+  .plan-panel.active { display: block; }
+  /* Box */
+  .box-acc { background: var(--acc-s); border: 1px solid var(--acc-b); border-left: 3px solid var(--acc); border-radius: var(--r); padding: 22px 26px; margin-bottom: 20px; }
+  .box-acc.green { background: var(--render-s); border-color: var(--render-b); border-left-color: var(--render); }
+  .box-acc .bx-tag { font-family: var(--font); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
+  .box-acc.green .bx-tag { color: var(--render2); }
+  .box-acc p { font-size: 0.88rem; color: var(--text); line-height: 1.82; }
+  .box-yellow { background: rgba(201,151,10,0.09); border: 1px solid rgba(201,151,10,0.28); border-left: 3px solid #c9970a; border-radius: var(--r); padding: 14px 20px; font-size: 0.85rem; color: var(--text); line-height: 1.75; margin: 18px 0; }
+  .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .req-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; }
+  .req-card .rc-tag { font-family: var(--font); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 7px; display: block; }
+  .req-card.green .rc-tag { color: var(--render2); }
+  .req-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+  .req-card strong { color: var(--text); font-weight: 500; }
+  /* Pricing */
+  .pricing-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 16px; }
+  .pricing-table thead tr { background: var(--bg3); }
+  .pricing-table th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 11px 17px; text-align: left; border-bottom: 1px solid var(--border); }
+  .pricing-table td { font-weight: 400; padding: 14px 17px; font-size: 0.87rem; color: var(--muted); border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .pricing-table tr:last-child td { border-bottom: none; }
+  .pricing-table tbody tr:hover td { background: var(--bg2); }
+  .td-name { color: var(--text) !important; font-weight: 500; }
+  .td-price { font-size: 1.25rem !important; font-weight: 600; color: #fff !important; letter-spacing: -0.02em; }
+  .pricing-note { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); line-height: 2; }
+  /* BIM calc */
+  .bim-calc-box { background: #111827; border: 1px solid #1e3a5f; border-radius: 8px; overflow: hidden; margin-bottom: 22px; padding: 0 22px; }
+  .bim-calc-inner { background: #0d1626; border: 1px solid #1e3a5f; border-radius: 6px; overflow: hidden; }
+  .bim-calc-hdr { background: #0a1220; border-bottom: 1px solid #1a2f4a; padding: 12px 20px; font-family: var(--font); font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #5ab4ff; }
+  .bim-calc-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .bim-flbl { font-family: var(--font); font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #4a6080; margin-bottom: 6px; display: block; }
+  .bim-calc-body select { background: #0d1a2d; border: 1px solid #1e3a5f; border-radius: 6px; color: #dde4f0; padding: 11px 14px; font-size: .88rem; outline: none; cursor: pointer; width: 100%; }
+  .bim-base-disp { font-family: monospace; font-size: .8rem; color: #6a8aaa; padding: 11px 14px; background: #0d1a2d; border: 1px solid #152030; border-radius: 6px; }
+  .bim-step-row { display: flex; align-items: center; gap: 12px; }
+  .bim-step-btn { background: #0d1a2d; border: 1px solid #1e3a5f; border-radius: 6px; color: #5ab4ff; width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .14s; }
+  .bim-step-btn:hover { background: rgba(90,180,255,.08); }
+  .bim-res { background: #0a1525; border: 1px solid #1e3a5f; border-left: 3px solid #5ab4ff; border-radius: 6px; padding: 16px 18px 12px; margin-top: 4px; }
+  .bim-res-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #152030; font-size: .83rem; color: #6a8aaa; }
+  .bim-res-row:last-child { border-bottom: none; }
+  .bim-res-row span:last-child { font-family: monospace; font-size: .8rem; color: #dde4f0; }
+  .bim-tot-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 4px; border-top: 1px solid #1e3a5f; margin-top: 8px; }
+  .bim-tot-lbl { font-family: monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: #4a6080; }
+  .bim-tot-val { font-size: 1.6rem; font-weight: 600; color: #fff; letter-spacing: -.03em; }
+  .bim-note { font-family: monospace; font-size: .67rem; color: #6a8aaa; line-height: 1.8; padding: 9px 14px; background: rgba(0,0,0,.15); border: 1px solid #152030; border-radius: 6px; }
+  /* Box preventivo stile sinottiche */
+  .preventivo-box { background: var(--bg3); border: 1px solid var(--acc-b); border-radius: var(--r); overflow: hidden; margin-top: 16px; margin-bottom: 4px; }
+  .prev-header { background: rgba(26,95,168,0.15); border-bottom: 1px solid var(--acc-b); padding: 12px 20px; font-family: var(--font); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--acc2); }
+  .prev-body { padding: 18px 20px 14px; }
+  .prev-righe { margin-bottom: 14px; }
+  .prev-riga { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; color: var(--muted); }
+  .prev-riga:last-child { border-bottom: none; }
+  .prev-riga span:last-child { font-family: var(--mono); font-size: 0.82rem; color: var(--text); }
+  .prev-totale-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0 4px; border-top: 1px solid var(--border2); margin-top: 4px; }
+  .prev-totale-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+  .prev-totale-val { font-size: 1.8rem; font-weight: 600; color: #fff; letter-spacing: -0.03em; }
+  .prev-note { background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); padding: 9px 20px; font-family: var(--mono); font-size: 0.63rem; color: var(--dim); line-height: 1.7; }
+
+  .bim-cta { background: #5ab4ff; color: #0a1220; border: none; border-radius: 6px; padding: 12px 24px; font-size: .82rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: opacity .16s, background .15s; }
+  .bim-cta:hover { opacity: .85; }
+  .bim-cta.confermato { background: #22c97a; color: #0a1220; }
+  .bim-cta.confermato:hover { opacity: 0.85; }
+  .prev-warning-bim { display: none; margin-top: 10px; padding: 10px 14px; background: rgba(26,95,168,0.10); border: 1px solid rgba(26,95,168,0.35); border-left: 3px solid #1a5fa8; border-radius: var(--r); font-family: var(--mono); font-size: 0.72rem; color: #3a9bd4; line-height: 1.6; }
+  /* Workflow */
+  .wf { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 8px; }
+  .wf-s { background: var(--bg2); padding: 20px 16px; border-right: 1px solid var(--border); }
+  .wf-s:last-child { border-right: none; }
+  .wf-n { font-family: var(--font); font-size: 0.68rem; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; display: block; }
+  .wf-t { font-size: 0.83rem; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .wf-d { font-size: 0.76rem; color: var(--muted); line-height: 1.6; }
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .fg { display: flex; flex-direction: column; gap: 7px; }
+  .fg.full { grid-column: 1 / -1; }
+  .fg label { font-family: var(--mono); font-size: 0.61rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+  .fg label .req { color: var(--acc2); }
+  .fg input[type="text"], .fg input[type="email"], .fg input[type="tel"], .fg textarea, .fg select { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); padding: 11px 14px; font-family: var(--font); font-size: 0.9rem; font-weight: 400; outline: none; width: 100%; transition: border-color 0.14s; }
+  .fg select { cursor: pointer; }
+  .fg select option { background: var(--bg2); }
+  .fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--border2); }
+  .fg textarea { resize: vertical; min-height: 88px; }
+  .fg input[type="file"] { background: var(--bg2); border: 1px dashed var(--border); border-radius: var(--r); color: var(--muted); padding: 22px 16px; font-family: var(--mono); font-size: 0.72rem; width: 100%; cursor: pointer; }
+  .fg input[type="file"]::file-selector-button { background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); padding: 7px 14px; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; margin-right: 14px; }
+  .zip-box { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 20px; margin-top: 10px; }
+  .zip-box p { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); line-height: 1.95; }
+  .zip-box .zy { color: var(--acc2); }
+  .zip-box .zt { color: var(--text); font-weight: 500; }
+  .chk-row { display: flex; align-items: flex-start; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 15px 18px; margin-top: 12px; cursor: pointer; transition: border-color 0.14s; }
+  .chk-row:hover { border-color: var(--border2); }
+  .chk-row input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 17px; height: 17px; min-width: 17px; border: 1px solid var(--dim); background: transparent; border-radius: 2px; cursor: pointer; margin-top: 2px; position: relative; transition: background 0.14s, border-color 0.14s; }
+  .chk-row input[type="checkbox"]:checked { background: var(--acc); border-color: var(--acc); }
+  .chk-row input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 10px; font-weight: 700; line-height: 1; }
+  .chk-row label { font-size: 0.85rem; color: var(--muted); cursor: pointer; line-height: 1.7; }
+  .chk-row strong { color: var(--text); font-weight: 500; }
+  .submit-area { margin-top: 24px; }
+  .submit-row { display: flex; align-items: center; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  button[type="submit"] { background: var(--acc); color: #fff; border: 1px solid var(--acc); border-radius: var(--r); padding: 14px 32px; font-family: var(--font); font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  button[type="submit"]:hover { background: transparent; color: var(--acc2); border-color: var(--acc2); }
+  button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
+  .submit-hint { font-family: var(--mono); font-size: 0.67rem; color: var(--muted); line-height: 1.9; }
+  footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 28px 0; }
+  .ft { max-width: 840px; margin: 0 auto; padding: 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+  .ft-info p { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); line-height: 2.1; }
+  .ft-info a { color: var(--text); text-decoration: none; }
+  .ft-name { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .ft-right { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 2; }
+  .ft-legal { max-width: 840px; margin: 14px auto 0; padding: 14px 22px 0; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--muted); line-height: 1.85; }
+  #form-overlay { display:none; position:fixed; inset:0; z-index:999; background:rgba(10,12,18,0.96); backdrop-filter:blur(6px); align-items:center; justify-content:center; flex-direction:column; gap:28px; padding:32px; text-align:center; }
+  #form-overlay.active { display:flex; }
+  .ov-seal { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); border:1px solid var(--border2); padding:6px 18px; border-radius:2px; }
+  .ov-spinner { width:44px; height:44px; border:2px solid var(--border2); border-top-color:var(--acc2); border-radius:50%; animation:spin 1.1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .ov-title { font-size:clamp(1rem,2.5vw,1.35rem); font-weight:500; color:#fff; letter-spacing:-0.02em; max-width:520px; line-height:1.5; }
+  .ov-subtitle { font-family:var(--mono); font-size:0.72rem; color:var(--muted); max-width:440px; line-height:1.9; }
+  .ov-progress-wrap { width:280px; height:2px; background:var(--border2); border-radius:2px; overflow:hidden; }
+  .ov-progress-bar { height:100%; background:var(--acc2); width:0%; transition:width 0.5s ease; border-radius:2px; }
+  .ov-check { width:54px; height:54px; border:2px solid #22c97a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#22c97a; }
+  .ov-date { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; color:var(--muted); border-top:1px solid var(--border); padding-top:18px; max-width:400px; line-height:1.9; }
+  .ov-error-icon { width:54px; height:54px; border:2px solid #c0392b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#c0392b; }
+  .ov-btn-back { background:transparent; color:var(--acc2); border:1px solid var(--acc2); border-radius:var(--r); padding:11px 28px; font-family:var(--mono); font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:background 0.16s; margin-top:8px; }
+  .ov-btn-back:hover { background:var(--acc-s); }
+  .zip-error { display:none; margin-top:8px; padding:10px 14px; background:rgba(192,57,43,0.10); border:1px solid rgba(192,57,43,0.35); border-left:3px solid #c0392b; border-radius:var(--r); font-family:var(--mono); font-size:0.72rem; color:#e07060; line-height:1.6; }
+  @media (max-width: 680px) {
+    .req-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .fg.full { grid-column: 1; }
+    .ft { grid-template-columns: 1fr; }
+    .ft-right { text-align: left; }
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .wf { grid-template-columns: 1fr 1fr; }
+    .wf-s:nth-child(even) { border-right: none; }
+    .tab-row { flex-direction: column; }
+    .tab-btn { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<header>
+  <div class="hdr">
+    <div>
+      <div class="hdr-name">Geom. Pegoraro Alex</div>
+      <div class="hdr-sub">Servizi Tecnici Grafici</div>
+    </div>
+    <a href="index.html" class="hdr-back">← Tutti i Servizi</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eye">Servizio 02</div>
+    <h1><span class="ca">DWG</span> → <span class="ca2">BIM & Rendering</span></h1>
+    <p class="hero-desc">Da un elaborato DWG esistente, restituisco un modello BIM parametrico (Revit/IFC) oppure render fotorealistici in alta risoluzione. Tre percorsi distinti — scegli quello che fa per te.</p>
+    <a href="#commissione" class="btn">Invia Commissione →</a>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-v">48h</div><div class="kpi-l">Preventivo</div></div>
+      <div class="kpi"><div class="kpi-v">IFC</div><div class="kpi-l">Standard aperto</div></div>
+      <div class="kpi"><div class="kpi-v">4K</div><div class="kpi-l">Risoluzione render</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- §01 DESCRIZIONE SERVIZIO — con tab per i tre percorsi -->
+<div class="sec">
+  <div class="wrap">
+    <h2>Scegli il tuo Percorso</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:28px; line-height:1.8;">Tre percorsi distinti a partire dallo stesso file DWG. Seleziona il tab per scoprire input, output e differenze di ciascuno. Puoi combinare BIM e Rendering con il Percorso C.</p>
+
+    <div class="tab-row" id="tab-row">
+      <button class="tab-btn active-render" onclick="switchTab('render')" id="tab-render">🎨 Percorso A — Solo Rendering</button>
+      <button class="tab-btn" onclick="switchTab('bim')" id="tab-bim">🏗 Percorso B — Modello BIM</button>
+      <button class="tab-btn" onclick="switchTab('combo')" id="tab-combo">✦ Percorso C — BIM + Rendering</button>
+    </div>
+
+    <div class="plan-panel active" id="panel-render">
+      <div class="box-acc green">
+        <div class="bx-tag">Percorso A — Rendering Fotorealistico</div>
+        <p>Elaboro il tuo file DWG o modello 3D (OBJ, SKP, 3DS) e restituisco render fotorealistici in alta risoluzione. Consegna in PDF ad alta qualità. Ideale per presentazioni al cliente, conferenze di servizi, documentazione di progetto o materiale promozionale.</p>
+      </div>
+      <div class="req-grid">
+        <div class="req-card green"><span class="rc-tag">File input accettati</span><p><strong>DWG</strong> con geometria 3D o piante per estrusione, oppure modelli <strong>OBJ / SKP / 3DS</strong> già tridimensionali. Opzionale: file .TXT con specifiche materiali e finiture.</p></div>
+        <div class="req-card green"><span class="rc-tag">File output consegnati</span><p><strong>PDF alta risoluzione</strong> (fino a 4K). Formato A3/A2 o dimensione concordata. In assenza di specifiche finiture si applica una palette neutra standard.</p></div>
+      </div>
+      <div class="box-yellow">⚠ Il render è un elaborato grafico di supporto visivo e non costituisce progetto esecutivo. In assenza del file specifiche finiture verrà applicata una palette di materiali neutra standard.</div>
+    </div>
+
+    <div class="plan-panel" id="panel-bim">
+      <div class="box-acc">
+        <div class="bx-tag">Percorso B — Modello BIM Parametrico</div>
+        <p>Traspongo i tuoi elaborati DWG in un modello BIM tridimensionale parametrico. Consegna del file nativo (Revit RVT o ArchiCAD PLN) più esportazione IFC per interoperabilità con qualsiasi software. LOD e disciplina specificati dal committente.</p>
+      </div>
+      <div class="req-grid">
+        <div class="req-card"><span class="rc-tag">File input accettati</span><p><strong>DWG</strong> — piante per livello (una per piano), prospetti e sezioni se disponibili. Più file <strong>specifiche_bim.txt</strong> con LOD richiesto, software target e disciplina.</p></div>
+        <div class="req-card"><span class="rc-tag">File output consegnati</span><p><strong>File nativo</strong> (RVT o PLN) + <strong>IFC</strong> standard aperto per interoperabilità. Coordinato per disciplina. LOD dalla 200 alla 300 in base al pacchetto scelto.</p></div>
+      </div>
+      <div class="box-yellow">⚠ Il modello BIM è un elaborato di supporto grafico. La validazione tecnica e la firma degli elaborati rimangono in capo al professionista responsabile del progetto.</div>
+    </div>
+
+    <!-- panel-combo viene gestito da switchTab come fallback -->
+    <div class="plan-panel" id="panel-combo">
+      <div class="box-acc">
+        <div class="bx-tag">Percorso C — BIM + Rendering Combinato</div>
+        <p>La soluzione più completa: modello BIM parametrico completo (file nativo + IFC) abbinato a render fotorealistici nello stesso pacchetto. Sconto applicato rispetto all'acquisto separato dei due servizi. Ideale per studi che necessitano sia della documentazione tecnica che del materiale visivo.</p>
+      </div>
+      <div class="req-grid">
+        <div class="req-card"><span class="rc-tag">File input accettati</span><p><strong>DWG</strong> — piante per livello, prospetti e sezioni (se disponibili). File <strong>specifiche_bim.txt</strong> con LOD, software target e disciplina. Opzionale: specifiche finiture per i render.</p></div>
+        <div class="req-card"><span class="rc-tag">File output consegnati</span><p><strong>File nativo BIM</strong> (RVT/PLN) + <strong>IFC</strong> + <strong>PDF render</strong> ad alta risoluzione. Tutto coordinato nel pacchetto scelto. Render aggiuntivi disponibili a tariffa.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §02 PACCHETTI E TARIFFE -->
+<div class="sec">
+  <div class="wrap">
+    <h2>Pacchetti e Tariffe</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:24px; line-height:1.8;">Le tab qui sotto sono sincronizzate con la selezione del percorso. Prezzi non soggetti a IVA (regime forfettario). Contributo CIPAG 5% e imposta di bollo €2,00 inclusi in fattura.</p>
+
+    <!-- Rendering -->
+    <div id="pricing-render">
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:18px; line-height:1.8;">Prezzi per <strong style="color:var(--text)">rendering fotorealistici</strong> — consegna in PDF alta risoluzione.</p>
+      <table class="pricing-table">
+        <thead><tr><th>Pacchetto</th><th>Contenuto</th><th>Prezzo</th><th>Consegna</th></tr></thead>
+        <tbody>
+          <tr><td class="td-name">Vista Singola</td><td>1 render fotorealistico, 1 punto di vista concordato</td><td><span class="td-price">80€</span></td><td>48h dal saldo</td></tr>
+          <tr><td class="td-name">Pacchetto Base</td><td>3 render, punti di vista concordati prima della lavorazione</td><td><span class="td-price">210€</span></td><td>72h dal saldo</td></tr>
+          <tr><td class="td-name">Pacchetto Avanzato</td><td>6 render + 1 revisione inclusa</td><td><span class="td-price">380€</span></td><td>5 gg lavorativi</td></tr>
+          <tr><td class="td-name">Pacchetto Completo</td><td>10 render + 2 revisioni incluse</td><td><span class="td-price">580€</span></td><td>8 gg lavorativi</td></tr>
+          <tr><td class="td-name">Revisione Post-Consegna</td><td>Modifica luci, materiali o punto di vista su render già consegnato</td><td><span class="td-price">35€</span></td><td>24h dal saldo</td></tr>
+          <tr><td class="td-name">Urgenza (+50%)</td><td>Dimezzamento dei tempi di consegna su qualsiasi pacchetto</td><td><span class="td-price">+50%</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BIM -->
+    <div id="pricing-bim" style="display:none;">
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:18px; line-height:1.8;">Prezzi per <strong style="color:var(--text)">modello BIM</strong> — file nativo + IFC.</p>
+      <table class="pricing-table">
+        <thead><tr><th>Pacchetto</th><th>Contenuto</th><th>Prezzo base</th><th>Consegna</th></tr></thead>
+        <tbody>
+          <tr><td class="td-name">Monopiano Semplice</td><td>Singolo piano, LOD 200, solo architettonico</td><td><span class="td-price">180€</span></td><td>5 gg lavorativi</td></tr>
+          <tr><td class="td-name">Monopiano Completo</td><td>Singolo piano, LOD 300 + esportazione IFC</td><td><span class="td-price">280€</span></td><td>7 gg lavorativi</td></tr>
+          <tr><td class="td-name">Edificio Multipiano</td><td>2–4 piani, LOD 300 + IFC — tempi da concordare</td><td><span class="td-price">480€</span></td><td>Preventivo</td></tr>
+          <tr><td class="td-name">Piano Aggiuntivo</td><td>Ogni livello oltre il primo incluso nel pacchetto base</td><td><span class="td-price">+90€</span></td><td>+24h cad.</td></tr>
+          <tr><td class="td-name">Disciplina Aggiuntiva</td><td>Modellazione strutturale o impiantistica (MEP)</td><td><span class="td-price">+120€</span></td><td>+48h cad.</td></tr>
+          <tr><td class="td-name">Revisione Post-Consegna</td><td>Modifica elementi o aggiunta parametri su modello già consegnato</td><td><span class="td-price">35€</span></td><td>24h dal saldo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- COMBO -->
+    <div id="pricing-combo" style="display:none;">
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:18px; line-height:1.8;">Prezzi per <strong style="color:var(--text)">BIM + Rendering combinato</strong> — sconto rispetto all'acquisto separato.</p>
+      <table class="pricing-table">
+        <thead><tr><th>Pacchetto</th><th>Contenuto</th><th>Prezzo</th><th>Consegna</th></tr></thead>
+        <tbody>
+          <tr><td class="td-name">Combo Essenziale</td><td>Monopiano LOD 200 + 1 render</td><td><span class="td-price">230€</span></td><td>7 gg lavorativi</td></tr>
+          <tr><td class="td-name">Combo Standard</td><td>Monopiano LOD 300 + IFC + 3 render</td><td><span class="td-price">430€</span></td><td>10 gg lavorativi</td></tr>
+          <tr><td class="td-name">Combo Avanzato</td><td>Monopiano LOD 300 + IFC + 6 render + 1 revisione</td><td><span class="td-price">620€</span></td><td>12 gg lavorativi</td></tr>
+          <tr><td class="td-name">Combo Multipiano</td><td>2–4 piani LOD 300 + IFC + 6 render — tempi da concordare</td><td><span class="td-price">880€</span></td><td>Preventivo</td></tr>
+          <tr><td class="td-name">Piano Aggiuntivo</td><td>Ogni livello oltre quelli inclusi nel pacchetto scelto</td><td><span class="td-price">+90€</span></td><td>+24h cad.</td></tr>
+          <tr><td class="td-name">Render Aggiuntivo</td><td>Render extra oltre quelli inclusi nel pacchetto scelto</td><td><span class="td-price">+65€</span></td><td>+24h cad.</td></tr>
+          <tr><td class="td-name">Revisione Post-Consegna</td><td>Modifica su BIM o render già consegnato</td><td><span class="td-price">35€</span></td><td>24h dal saldo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="pricing-note">
+      Preventivo personalizzato per edifici complessi o modellazione multidisciplinare &nbsp;·&nbsp; Prezzi non soggetti a IVA (regime forfettario · contributo CIPAG incluso in fattura)<br>
+      Pagamento: Bonifico bancario · PayPal &nbsp;·&nbsp; Fattura inviata entro 48h dalla ricezione commessa
+    </p>
+  </div>
+</div>
+
+<!-- §03 CALCOLA IL PREVENTIVO -->
+<div class="sec" id="calcolatore">
+  <div class="wrap">
+    <h2>Calcola il tuo Preventivo</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:20px; line-height:1.8;">Seleziona prima il percorso con le tab in alto, poi configura le opzioni nel calcolatore per ottenere una stima immediata. Il preventivo definitivo viene confermato via email entro 48h lavorative.</p>
+
+    <div class="bim-calc-box">
+      <div class="bim-calc-inner">
+        <div class="bim-calc-hdr">Configuratore Preventivo Interattivo</div>
+        <div class="bim-calc-body">
+          <div><span class="bim-flbl">Percorso selezionato</span><div class="bim-base-disp" id="bim-base-disp">← Seleziona un percorso con le tab in alto</div></div>
+          <div><span class="bim-flbl" id="bim-sub-lbl">Pacchetto</span><select id="bim-sub-select" onchange="calcolaBim()"><option value="">— Seleziona pacchetto —</option></select></div>
+          <div id="bim-extra-piani" style="display:none;"><span class="bim-flbl">Piani aggiuntivi × +90 €/piano</span><div class="bim-step-row"><button type="button" class="bim-step-btn" onclick="bimStep('piani',-1)">−</button><span id="bim-piani-val" style="font-family:monospace;font-size:1rem;color:#fff;min-width:24px;text-align:center;">0</span><button type="button" class="bim-step-btn" onclick="bimStep('piani',1)">+</button></div></div>
+          <div id="bim-extra-disc" style="display:none;"><span class="bim-flbl">Discipline aggiuntive × +120 €/disciplina</span><div class="bim-step-row"><button type="button" class="bim-step-btn" onclick="bimStep('disc',-1)">−</button><span id="bim-disc-val" style="font-family:monospace;font-size:1rem;color:#fff;min-width:24px;text-align:center;">0</span><button type="button" class="bim-step-btn" onclick="bimStep('disc',1)">+</button></div></div>
+          <div id="bim-extra-rend" style="display:none;"><span class="bim-flbl">Render aggiuntivi × +65 €/render</span><div class="bim-step-row"><button type="button" class="bim-step-btn" onclick="bimStep('rend',-1)">−</button><span id="bim-rend-val" style="font-family:monospace;font-size:1rem;color:#fff;min-width:24px;text-align:center;">0</span><button type="button" class="bim-step-btn" onclick="bimStep('rend',1)">+</button></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><input type="checkbox" id="bim-urgenza" onchange="calcolaBim()" style="width:16px;height:16px;accent-color:#5ab4ff;cursor:pointer;"><label for="bim-urgenza" style="font-size:.86rem;color:#6a8aaa;cursor:pointer;">Urgenza +50% — dimezzamento dei tempi di consegna</label></div>
+          <div class="preventivo-box" id="preventivo-box" style="display:none;">
+            <div class="prev-header">Preventivo Indicativo</div>
+            <div class="prev-body">
+              <div class="prev-righe" id="bim-res-righe"></div>
+              <div class="prev-totale-row">
+                <span class="prev-totale-label">Totale da Corrispondere</span>
+                <span class="prev-totale-val" id="bim-tot-val">—</span>
+              </div>
+            </div>
+            <div class="prev-note">Imposta di bollo €2,00 + contributo CIPAG 5% già inclusi · Pagamento: Bonifico bancario · PayPal</div>
+          </div>
+          <div id="bim-cta-row" style="display:none; margin-top:16px;">
+            <button type="button" class="bim-cta" id="bim-aggiungi-btn">Aggiungi a Commessa →</button>
+            <div class="prev-warning-bim" id="prev-warning-bim">⚠ Devi prima calcolare e aggiungere il preventivo alla commessa prima di poter inviare.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="bim-prev-det" name="preventivo_dettaglio" value="">
+  </div>
+</div>
+
+<!-- §04 COSA FORNIRE -->
+<div class="sec">
+  <div class="wrap">
+    <h2>Come Funziona</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:20px; line-height:1.8;">Processo completamente digitale in 4 passi. Il timer di lavorazione parte solo dalla conferma del pagamento ricevuto.</p>
+    <div class="wf">
+      <div class="wf-s">
+        <span class="wf-n">STEP 01</span>
+        <div class="wf-t">Invio Commissione</div>
+        <div class="wf-d">Compila il modulo, seleziona il percorso e allega il file ZIP con tutti gli elaborati richiesti.</div>
+      </div>
+      <div class="wf-s">
+        <span class="wf-n">STEP 02</span>
+        <div class="wf-t">Preventivo via Mail</div>
+        <div class="wf-d">Entro 48h lavorative ricevi il preventivo definitivo, valutando complessità e tempi specifici del progetto.</div>
+      </div>
+      <div class="wf-s">
+        <span class="wf-n">STEP 03</span>
+        <div class="wf-t">Pagamento</div>
+        <div class="wf-d">Il timer di lavorazione parte dalla conferma del pagamento ricevuto (bonifico o PayPal).</div>
+      </div>
+      <div class="wf-s">
+        <span class="wf-n">STEP 04</span>
+        <div class="wf-t">Consegna</div>
+        <div class="wf-d">Rendering in PDF alta risoluzione o file BIM nativo + IFC, consegnati via email nei tempi concordati.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §05 COME FUNZIONA -->
+<div class="sec">
+  <div class="wrap">
+    <h2>Cosa Fornire</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:20px; line-height:1.8;">Tutti i file vanno compressi in un unico <strong style="color:var(--text)">.ZIP</strong> e allegati al modulo di commissione. Maggiore è la completezza degli elaborati, maggiore sarà la fedeltà del risultato.</p>
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="rc-tag">Percorso A — Rendering</span>
+        <p>
+          <strong>DWG</strong> con geometria della pianta o modello 3D (OBJ / SKP / 3DS)<br>
+          <strong>finiture.txt</strong> — specifiche materiali, colori, rifinitura superfici (opzionale ma consigliato)<br>
+          Indicare numero di viste e punti di osservazione desiderati
+        </p>
+      </div>
+      <div class="req-card">
+        <span class="rc-tag">Percorso B — BIM</span>
+        <p>
+          <strong>pianta_piano_X.dwg</strong> per ogni livello dell'edificio<br>
+          <strong>prospetti.dwg</strong> e sezioni se disponibili<br>
+          <strong>specifiche_bim.txt</strong> — LOD richiesto, software target (Revit/ArchiCAD), disciplina (architettonico, strutturale, MEP)
+        </p>
+      </div>
+      <div class="req-card">
+        <span class="rc-tag">Percorso C — BIM + Rendering</span>
+        <p>Combinazione dei file richiesti per i due percorsi: piante DWG + specifiche_bim.txt + eventuali finiture per i render. Tutto in un unico file ZIP.</p>
+      </div>
+      <div class="req-card">
+        <span class="rc-tag">Formato Archivio</span>
+        <p>Comprimi tutti i file in un unico archivio <strong>.ZIP</strong>. Per edifici storici allega anche eventuali rilievi esistenti o fotografie. Maggiore completezza = risultato più fedele.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §06 MODULO DI COMMISSIONE -->
+<div class="sec" id="commissione">
+  <div class="wrap">
+    <h2>Modulo di Commissione</h2>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:24px; line-height:1.8;">Compila i campi obbligatori (<span style="color:var(--acc2)">*</span>), allega il file ZIP e spunta le dichiarazioni. Riceverai conferma immediata e preventivo definitivo entro 48h lavorative.</p>
+
+    <form id="commessa-form">
+      <div class="form-grid">
+        <div class="fg">
+          <label for="nome">Nome <span class="req">*</span></label>
+          <input type="text" id="nome" name="nome" required placeholder="Nome" autocomplete="given-name">
+        </div>
+        <div class="fg">
+          <label for="cognome">Cognome <span class="req">*</span></label>
+          <input type="text" id="cognome" name="cognome" required placeholder="Cognome" autocomplete="family-name">
+        </div>
+        <div class="fg">
+          <label for="telefono">Telefono <span class="req">*</span></label>
+          <input type="tel" id="telefono" name="telefono" required placeholder="Telefono" autocomplete="tel">
+        </div>
+        <div class="fg">
+          <label for="email">Email <span class="req">*</span></label>
+          <input type="email" id="email" name="email" required placeholder="Email" autocomplete="email">
+        </div>
+        <div class="fg full">
+          <label for="cf-piva">Codice Fiscale / Partita IVA <span class="req">*</span></label>
+          <input type="text" id="cf-piva" name="cf_piva" required placeholder="Codice Fiscale o Partita IVA" autocomplete="off">
+        </div>
+        <div class="fg full">
+          <label for="indirizzo-fatt">Indirizzo di Fatturazione <span class="req">*</span></label>
+          <input type="text" id="indirizzo-fatt" name="indirizzo_fatturazione" required placeholder="Indirizzo di fatturazione" autocomplete="street-address">
+        </div>
+        <div class="fg full">
+          <label for="pec">PEC <span style="color:var(--muted);font-weight:300;">(opzionale — per ricevere fattura elettronica)</span></label>
+          <input type="email" id="pec" name="pec" placeholder="Indirizzo PEC">
+        </div>
+        <div class="fg full">
+          <label for="percorso">Percorso richiesto <span class="req">*</span></label>
+          <select id="percorso" name="percorso" required>
+            <option value="">— Seleziona —</option>
+            <option value="rendering">Percorso A — Solo Rendering (PDF)</option>
+            <option value="bim">Percorso B — Modello BIM (file nativo + IFC)</option>
+            <option value="bim+rendering">Percorso C — BIM + Rendering (pacchetto combinato)</option>
+          </select>
+        </div>
+        <div class="fg full">
+          <label for="note">Note e Specifiche</label>
+          <textarea id="note" name="note" placeholder="Numero di viste e punti di osservazione (Rendering) · LOD richiesto, software target Revit o ArchiCAD, disciplina, numero piani (BIM) · Finiture e materiali · Eventuali urgenze o scadenze…"></textarea>
+        </div>
+        <div class="fg full">
+          <label for="file-allegato">File ZIP <span class="req">*</span> — DWG + eventuali specifiche</label>
+          <input type="file" id="file-allegato" name="attachment" accept=".zip" required />
+          <div class="zip-error" id="zip-error">⚠ Il file selezionato non è un archivio .ZIP. Comprimi i tuoi file in un .zip e ricarica.</div>
+          <div class="zip-box">
+            <p>
+              <span class="zy">▸ Percorso A — Rendering:</span><br>
+              — <span class="zt">modello.dwg</span> (o .obj / .3ds / .skp)<br>
+              — <span class="zt">finiture.txt</span> — specifiche materiali (opzionale)<br><br>
+              <span class="zy">▸ Percorso B — BIM:</span><br>
+              — <span class="zt">pianta_piano_X.dwg</span> per ogni livello<br>
+              — <span class="zt">prospetti.dwg</span> e sezioni (se disponibili)<br>
+              — <span class="zt">specifiche_bim.txt</span> — LOD, software, disciplina<br><br>
+              <span style="color:var(--dim)">Maggiore completezza degli elaborati = risultato più fedele e preventivo più preciso.</span>
+            </p>
+          </div>
+        </div>
+        <input type="hidden" id="bim-prev-det-form" name="preventivo_dettaglio_form" value="">
+      </div>
+
+      <div class="submit-area">
+        <p style="font-size:0.8rem; color:var(--dim); font-family:var(--mono); margin-bottom:4px; letter-spacing:0.06em; text-transform:uppercase;">Dichiarazioni obbligatorie — spuntare entrambe per procedere</p>
+
+        <div class="chk-row">
+          <input type="checkbox" id="chk1" name="accetto-disclaimer" value="si" required>
+          <label for="chk1">Ho letto e compreso che questo è un <strong>servizio di supporto grafico tecnico</strong> e <strong>non una consulenza professionale asseverata</strong> ai sensi della normativa vigente. Rimango il solo responsabile dell'utilizzo degli elaborati prodotti nell'ambito di pratiche edilizie o di qualsiasi altra natura giuridica.</label>
+        </div>
+
+        <div class="chk-row">
+          <input type="checkbox" id="chk2" name="accetto-privacy" value="si" required>
+          <label for="chk2">Acconsento al trattamento dei dati personali forniti ai fini della gestione della presente commissione, ai sensi del <strong>GDPR 2016/679</strong> e del D.Lgs. 196/2003.</label>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" id="submit-btn">Invia Commissione →</button>
+          <div class="submit-hint">
+            Riceverai il preventivo definitivo entro 48h lavorative via mail.<br>
+            Consegna nei tempi concordati dal pagamento ricevuto.
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="form-overlay">
+  <div id="ov-loading">
+    <div class="ov-seal">Invio in Corso</div>
+    <div class="ov-spinner"></div>
+    <div class="ov-title">Invio commessa in corso…<br>Non chiudere questa pagina.</div>
+    <div class="ov-progress-wrap"><div class="ov-progress-bar" id="ov-bar"></div></div>
+    <div class="ov-subtitle" id="ov-loading-detail">Preparazione pacchetto documentale…</div>
+  </div>
+  <div id="ov-success" style="display:none;flex-direction:column;align-items:center;gap:24px;">
+    <div class="ov-seal">Commissione Ricevuta</div>
+    <div class="ov-check">✓</div>
+    <div class="ov-title">Commessa acquisita correttamente.</div>
+    <div class="ov-subtitle">Riceverai conferma e preventivo all'indirizzo e-mail indicato entro <strong style="color:#dde4f0">48 ore lavorative</strong>.</div>
+    <div class="ov-date" id="ov-protocol">Ref.: —<br>Data: —</div>
+  </div>
+  <div id="ov-error" style="display:none;flex-direction:column;align-items:center;gap:20px;">
+    <div class="ov-seal">Trasmissione Interrotta</div>
+    <div class="ov-error-icon">✕</div>
+    <div class="ov-title">Errore durante l'invio.</div>
+    <div class="ov-subtitle" id="ov-error-detail">Verificare la connessione e riprovare.</div>
+    <button class="ov-btn-back" onclick="closeOverlay()">← Torna al Modulo</button>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-info">
+      <div class="ft-name">Geom. Pegoraro Alex</div>
+      <p>Email: <a href="/cdn-cgi/l/email-protection#82f2e7e5edf0e3f0ede3eee7fae5e7edefc2e5efe3ebeeace1edef"><span class="__cf_email__" data-cfemail="176772707865766578767b726f7072787a57707a767e7b3974787a">[email&#160;protected]</span></a></p>
+      <p>PEC: <a href="/cdn-cgi/l/email-protection#4829242d3066382d2f273a293a27082f2d27382d2b66213c"><span class="__cf_email__" data-cfemail="3c5d505944124c595b534e5d4e537c5b59534c595f125548">[email&#160;protected]</span></a></p>
+      <p>P.IVA: 04505080244</p>
+    </div>
+    <div class="ft-right">
+      <div>© 2025 Geom. Pegoraro Alex</div>
+      <div>DWG → BIM & Rendering</div>
+    </div>
+  </div>
+  <div class="ft-legal">
+    Il presente sito non costituisce consulenza professionale asseverata. I servizi offerti sono di esclusivo supporto grafico tecnico alla progettazione. P.IVA 04505080244.
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  const PALETTE = ["26,95,168","58,155,212","100,180,240","40,120,200"];
+
+  let W, H, nodes, hubs, t = 0;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    build();
+  }
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick() { return PALETTE[Math.floor(Math.random() * PALETTE.length)]; }
+
+  function build() {
+    // 3 layers of nodes at different speeds (parallax depth)
+    nodes = [];
+    const layers = [
+      { count: 18, speed: 0.12, rMin: 0.5, rMax: 1.2, alpha: 0.35 },
+      { count: 28, speed: 0.26, rMin: 0.8, rMax: 2.0, alpha: 0.50 },
+      { count: 14, speed: 0.48, rMin: 1.2, rMax: 3.2, alpha: 0.65 },
+    ];
+    for (const l of layers) {
+      for (let i = 0; i < l.count; i++) {
+        const baseR = rand(l.rMin, l.rMax);
+        nodes.push({
+          x: rand(0, W), y: rand(0, H),
+          vx: (Math.random()-0.5)*l.speed,
+          vy: (Math.random()-0.5)*l.speed,
+          r: baseR,
+          baseR,
+          pulseSpeed: rand(0.008, 0.022),
+          pulsePhase: rand(0, Math.PI*2),
+          alpha: l.alpha,
+          col: pick(),
+          layer: l.speed,
+          isHub: false,
+        });
+      }
+    }
+
+    // 4–5 "hub" nodes: larger, slower, with glow rings
+    hubs = [];
+    for (let i = 0; i < 5; i++) {
+      hubs.push({
+        x: rand(W*0.1, W*0.9),
+        y: rand(H*0.1, H*0.9),
+        vx: (Math.random()-0.5)*0.08,
+        vy: (Math.random()-0.5)*0.08,
+        r: rand(3.5, 6),
+        ringPhase: rand(0, Math.PI*2),
+        col: pick(),
+      });
+    }
+  }
+
+  function drawGradientLine(x1, y1, x2, y2, col1, col2, alpha) {
+    const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+    grad.addColorStop(0, 'rgba(' + col1 + ',' + alpha + ')');
+    grad.addColorStop(1, 'rgba(' + col2 + ',' + alpha + ')');
+    ctx.beginPath();
+    ctx.strokeStyle = grad;
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Dark vignette over top-left title area to keep text readable
+    const vx = W * 0.0, vy = H * 0.0;
+    const vg = ctx.createRadialGradient(W*0.28, H*0.38, 0, W*0.28, H*0.38, W*0.45);
+    vg.addColorStop(0,   'rgba(15,17,23,0.82)');
+    vg.addColorStop(0.5, 'rgba(15,17,23,0.45)');
+    vg.addColorStop(1,   'rgba(15,17,23,0)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+    t += 0.012;
+
+    // --- Draw connections between regular nodes ---
+    const MAX_DIST = 150;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        if (Math.abs(nodes[i].layer - nodes[j].layer) > 0.01) continue; // only same layer
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MAX_DIST) {
+          const a = (1 - dist/MAX_DIST) * nodes[i].alpha * 0.6;
+          ctx.lineWidth = 0.7;
+          drawGradientLine(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y, nodes[i].col, nodes[j].col, a);
+        }
+      }
+    }
+
+    // --- Draw connections from hubs to nearby nodes ---
+    const HUB_DIST = 220;
+    for (const h of hubs) {
+      for (const n of nodes) {
+        const dx = h.x - n.x, dy = h.y - n.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < HUB_DIST) {
+          const a = (1 - dist/HUB_DIST) * 0.28;
+          ctx.lineWidth = 0.6;
+          drawGradientLine(h.x, h.y, n.x, n.y, h.col, n.col, a);
+        }
+      }
+    }
+
+    // --- Draw regular nodes ---
+    for (const n of nodes) {
+      // Pulse radius
+      n.r = n.baseR + Math.sin(t * n.pulseSpeed / 0.012 + n.pulsePhase) * n.baseR * 0.35;
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(' + n.col + ',' + n.alpha + ')';
+      ctx.fill();
+
+      // Soft glow on larger nodes
+      if (n.baseR > 1.8) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 2.5, 0, Math.PI*2);
+        const glow = ctx.createRadialGradient(n.x, n.y, n.r*0.5, n.x, n.y, n.r*2.5);
+        glow.addColorStop(0, 'rgba(' + n.col + ',' + (n.alpha*0.3) + ')');
+        glow.addColorStop(1, 'rgba(' + n.col + ',0)');
+        ctx.fillStyle = glow;
+        ctx.fill();
+      }
+
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    }
+
+    // --- Draw hubs ---
+    for (const h of hubs) {
+      h.ringPhase += 0.008;
+
+      // Outer expanding ring
+      const ringR = h.r + 6 + Math.sin(h.ringPhase) * 4;
+      const ringAlpha = 0.08 + Math.sin(h.ringPhase) * 0.05;
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, ringR, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(' + h.col + ',' + ringAlpha + ')';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Second ring
+      const ring2R = h.r + 14 + Math.sin(h.ringPhase + 1) * 6;
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, ring2R, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(' + h.col + ',' + (ringAlpha * 0.5) + ')';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+
+      // Core glow
+      const grad = ctx.createRadialGradient(h.x, h.y, 0, h.x, h.y, h.r*4);
+      grad.addColorStop(0, 'rgba(' + h.col + ',0.55)');
+      grad.addColorStop(0.4, 'rgba(' + h.col + ',0.15)');
+      grad.addColorStop(1, 'rgba(' + h.col + ',0)');
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, h.r*4, 0, Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, h.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(' + h.col + ',0.75)';
+      ctx.fill();
+
+      h.x += h.vx; h.y += h.vy;
+      if (h.x < 0 || h.x > W) h.vx *= -1;
+      if (h.y < 0 || h.y > H) h.vy *= -1;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+</script>
+
+<script>
+  function switchTab(tab) {
+    const tabRender = document.getElementById('tab-render');
+    const tabBim    = document.getElementById('tab-bim');
+    const panelR    = document.getElementById('panel-render');
+    const panelB    = document.getElementById('panel-bim');
+    const priceR    = document.getElementById('pricing-render');
+    const priceB    = document.getElementById('pricing-bim');
+
+    const tabCombo  = document.getElementById('tab-combo');
+    const panelC    = document.getElementById('panel-combo') || null;
+    const priceC    = document.getElementById('pricing-combo');
+    if (tab === 'render') {
+      tabRender.className = 'tab-btn active-render';
+      tabBim.className    = 'tab-btn';
+      if(tabCombo) tabCombo.className = 'tab-btn';
+      panelR.classList.add('active'); panelB.classList.remove('active');
+      priceR.style.display = ''; priceB.style.display = 'none'; if(priceC) priceC.style.display = 'none';
+    } else if (tab === 'bim') {
+      tabBim.className    = 'tab-btn active-bim';
+      tabRender.className = 'tab-btn';
+      if(tabCombo) tabCombo.className = 'tab-btn';
+      panelB.classList.add('active'); panelR.classList.remove('active');
+      priceR.style.display = 'none'; priceB.style.display = ''; if(priceC) priceC.style.display = 'none';
+    } else {
+      if(tabCombo) tabCombo.className = 'tab-btn active-bim';
+      tabRender.className = 'tab-btn'; tabBim.className = 'tab-btn';
+      panelR.classList.remove('active'); panelB.classList.remove('active');
+      priceR.style.display = 'none'; priceB.style.display = 'none'; if(priceC) priceC.style.display = '';
+    }
+  }
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function(){
+  var PKGS={
+    render:[
+      {l:'Vista Singola — 1 render, 1 punto di vista',b:80},
+      {l:'Pacchetto Base — 3 render, punti di vista concordati',b:210},
+      {l:'Pacchetto Avanzato — 6 render + 1 revisione inclusa',b:380},
+      {l:'Pacchetto Completo — 10 render + 2 revisioni incluse',b:580}
+    ],
+    bim:[
+      {l:'Monopiano Semplice — LOD 200, architettonico',b:180},
+      {l:'Monopiano Completo — LOD 300 + IFC',b:280},
+      {l:'Edificio Multipiano — 2–4 piani, LOD 300 + IFC',b:480}
+    ],
+    combo:[
+      {l:'Combo Essenziale — Monopiano LOD 200 + 1 render',b:230},
+      {l:'Combo Standard — Monopiano LOD 300 + IFC + 3 render',b:430},
+      {l:'Combo Avanzato — Monopiano LOD 300 + IFC + 6 render + 1 revisione',b:620},
+      {l:'Combo Multipiano — 2–4 piani LOD 300 + IFC + 6 render',b:880}
+    ]
+  };
+  var BOLLO=2,CIPAG=0.05;
+  var bimTab='render',bimPiani=0,bimDisc=0,bimRend=0;
+  function fmt(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2,useGrouping:true})+' €';}
+  function g(id){return document.getElementById(id);}
+
+  // Variabili globali preventivo
+  window._bimPreventivoTotale    = '';
+  window._bimPreventivoDettaglio = '';
+  window._bimPercorsoLabel       = '';
+  window.preventivoConfermato    = false;
+  window.preventivoImageBase64   = null;
+
+  function renderCalc(){
+    var names={render:'Solo Rendering (PDF)',bim:'Modello BIM (file nativo + IFC)',combo:'BIM + Rendering (Combinato)'};
+    g('bim-base-disp').textContent='✓ '+names[bimTab];
+    var sel=g('bim-sub-select');
+    sel.innerHTML='<option value="">— Seleziona pacchetto —</option>';
+    PKGS[bimTab].forEach(function(p,i){
+      var o=document.createElement('option');
+      o.value=i; o.textContent=p.l+' — '+fmt(p.b); sel.appendChild(o);
+    });
+    sel.value='';
+    g('bim-extra-piani').style.display=(bimTab!=='render')?'block':'none';
+    g('bim-extra-disc').style.display=(bimTab!=='render')?'block':'none';
+    g('bim-extra-rend').style.display=(bimTab==='combo')?'block':'none';
+    g('bim-piani-val').textContent=bimPiani=0;
+    g('bim-disc-val').textContent=bimDisc=0;
+    g('bim-rend-val').textContent=bimRend=0;
+    g('preventivo-box').style.display='none';
+    g('bim-cta-row').style.display='none';
+    // Reset conferma se si cambia percorso
+    window.preventivoConfermato = false;
+    window.preventivoImageBase64 = null;
+    var btnA = g('bim-aggiungi-btn');
+    if (btnA) { btnA.classList.remove('confermato'); btnA.textContent = 'Aggiungi a Commessa →'; }
+  }
+
+  window.bimStep=function(tipo,d){
+    if(tipo==='piani'){bimPiani=Math.max(0,bimPiani+d);g('bim-piani-val').textContent=bimPiani;}
+    if(tipo==='disc'){bimDisc=Math.max(0,bimDisc+d);g('bim-disc-val').textContent=bimDisc;}
+    if(tipo==='rend'){bimRend=Math.max(0,bimRend+d);g('bim-rend-val').textContent=bimRend;}
+    window.calcolaBim();
+  };
+
+  window.calcolaBim=function(){
+    var sel=g('bim-sub-select');
+    if(!sel||sel.value===''){g('preventivo-box').style.display='none';g('bim-cta-row').style.display='none';return;}
+    var pkg=PKGS[bimTab][parseInt(sel.value)];
+    var urg=g('bim-urgenza').checked;
+    var base=urg?Math.round(pkg.b*1.5):pkg.b;
+    var eP=bimPiani*90,eD=bimDisc*120,eR=bimRend*65;
+    var sub=base+eP+eD+eR;
+    var cipag=(sub+BOLLO)*CIPAG;
+    var tot=sub+BOLLO+cipag;
+    var righe=[];
+    righe.push({l:pkg.l+(urg?' (urgenza +50%)':''),v:fmt(base)});
+    if(eP>0) righe.push({l:bimPiani+' piani aggiuntivi ×90 €',v:fmt(eP)});
+    if(eD>0) righe.push({l:bimDisc+' discipline aggiuntive ×120 €',v:fmt(eD)});
+    if(eR>0) righe.push({l:bimRend+' render aggiuntivi ×65 €',v:fmt(eR)});
+    righe.push({l:'Imposta di bollo (art. 13 DPR 642/72)',v:fmt(BOLLO)});
+    righe.push({l:'Contributo integrativo CIPAG (5%)',v:fmt(cipag)});
+    g('bim-res-righe').innerHTML=righe.map(function(r){return '<div class="prev-riga"><span>'+r.l+'</span><span>'+r.v+'</span></div>';}).join('');
+    g('bim-tot-val').textContent=fmt(tot);
+    g('preventivo-box').style.display='block';
+    g('bim-cta-row').style.display='block';
+    var det=righe.map(function(r){return r.l+': '+r.v;}).join(' | ')+' | TOTALE: '+fmt(tot);
+    if(g('bim-prev-det')) g('bim-prev-det').value=det;
+    var names={render:'Percorso A — Solo Rendering (PDF)',bim:'Percorso B — Modello BIM (file nativo + IFC)',combo:'Percorso C — BIM + Rendering (Combinato)'};
+    window._bimPreventivoTotale    = fmt(tot);
+    window._bimPreventivoDettaglio = det;
+    window._bimPercorsoLabel       = names[bimTab] || bimTab;
+    // Reset conferma se si ricalcola
+    if (window.preventivoConfermato) {
+      window.preventivoConfermato = false;
+      window.preventivoImageBase64 = null;
+      var btnA = g('bim-aggiungi-btn');
+      if (btnA) { btnA.classList.remove('confermato'); btnA.textContent = 'Aggiungi a Commessa →'; }
+    }
+  };
+
+  // Intercetta switchTab per aggiornare il calcolatore
+  var _orig=window.switchTab;
+  window.switchTab=function(tab){
+    if(_orig) _orig(tab);
+    bimTab=tab; renderCalc();
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderCalc();
+    var btnA = g('bim-aggiungi-btn');
+    if (btnA) {
+      btnA.addEventListener('click', function() {
+        if (!window._bimPreventivoTotale) return;
+        btnA.disabled = true;
+        btnA.textContent = 'Acquisizione preventivo…';
+        var boxEl = g('preventivo-box');
+        html2canvas(boxEl, {
+          backgroundColor: '#1c2233',
+          scale: 2,
+          useCORS: true,
+          logging: false
+        }).then(function(canvas) {
+          window.preventivoImageBase64 = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+          window.preventivoConfermato = true;
+          btnA.classList.add('confermato');
+          btnA.textContent = '✓ Preventivo Aggiunto alla Commessa';
+          btnA.disabled = false;
+          g('prev-warning-bim').style.display = 'none';
+          document.getElementById('commissione').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }).catch(function() {
+          window.preventivoConfermato = true;
+          window.preventivoImageBase64 = null;
+          btnA.classList.add('confermato');
+          btnA.textContent = '✓ Preventivo Aggiunto alla Commessa';
+          btnA.disabled = false;
+          document.getElementById('commissione').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+  });
+})();
+</script>
+
+<script>
+  const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxxW2ApKVyF7W0EIXOTDXSipzaCxbWtyHnFRjknauJ-e8wTDWEUc839RRfv-6Y0iWjEZg/exec';
+
+  function fileToBase64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload  = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Lettura file fallita'));
+      r.readAsDataURL(file);
+    });
+  }
+  function showOverlay(state) {
+    const ov = document.getElementById('form-overlay');
+    ov.classList.add('active');
+    document.getElementById('ov-loading').style.display = state==='loading' ? 'flex' : 'none';
+    document.getElementById('ov-success').style.display = state==='success' ? 'flex' : 'none';
+    document.getElementById('ov-error').style.display   = state==='error'   ? 'flex' : 'none';
+  }
+  function closeOverlay() {
+    document.getElementById('form-overlay').classList.remove('active');
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('ov-bar').style.width = '0%';
+    document.getElementById('ov-loading-detail').textContent = 'Preparazione pacchetto documentale…';
+  }
+  function setProgress(pct, label) {
+    document.getElementById('ov-bar').style.width = pct + '%';
+    if (label) document.getElementById('ov-loading-detail').textContent = label;
+  }
+
+  document.getElementById('file-allegato').addEventListener('change', function() {
+    const zipErr = document.getElementById('zip-error');
+    if (this.files && this.files[0]) {
+      const fname = this.files[0].name.toLowerCase();
+      zipErr.style.display = fname.endsWith('.zip') ? 'none' : 'block';
+      if (!fname.endsWith('.zip')) this.value = '';
+    }
+  });
+  document.getElementById('commessa-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = document.getElementById('submit-btn');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    // BLOCCO: preventivo deve essere confermato
+    if (!window.preventivoConfermato) {
+      document.getElementById('prev-warning-bim').style.display = 'block';
+      document.getElementById('bim-cta-row').style.display = 'block';
+      document.getElementById('calcolatore').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // ZIP check
+    const fileElCheck = document.getElementById('file-allegato');
+    const zipErr = document.getElementById('zip-error');
+    if (fileElCheck && fileElCheck.files && fileElCheck.files[0]) {
+      const fname = fileElCheck.files[0].name.toLowerCase();
+      if (!fname.endsWith('.zip')) {
+        zipErr.style.display = 'block';
+        fileElCheck.value = '';
+        return;
+      } else { zipErr.style.display = 'none'; }
+    }
+    btn.disabled = true;
+    showOverlay('loading');
+    setProgress(5, 'Lettura documentale in corso…');
+
+    let attachmentBase64 = null, attachmentName = null, attachmentSize = null;
+    const fileEl = document.getElementById('file-allegato');
+    if (fileEl && fileEl.files && fileEl.files[0]) {
+      const file = fileEl.files[0];
+      attachmentName = file.name; attachmentSize = file.size;
+      try {
+        setProgress(20, 'Codifica pacchetto dati…');
+        attachmentBase64 = await fileToBase64(file);
+        setProgress(55, 'Codifica completata…');
+      } catch(err) {
+        document.getElementById('ov-error-detail').textContent = 'Impossibile leggere il file allegato.';
+        showOverlay('error'); btn.disabled = false; return;
+      }
+    }
+
+    // Legge il testo leggibile del percorso dal select
+    const percorsoSel = document.getElementById('percorso');
+    const percorsoTesto = percorsoSel ? percorsoSel.options[percorsoSel.selectedIndex].text : '';
+    const bimSubSel = document.getElementById('bim-sub-select');
+    const pacchettoCalc = (bimSubSel && bimSubSel.selectedIndex > 0) ? bimSubSel.options[bimSubSel.selectedIndex].text : '';
+
+    const payload = {
+      nome:                   document.getElementById('nome').value.trim(),
+      cognome:                document.getElementById('cognome').value.trim(),
+      telefono:               document.getElementById('telefono').value.trim(),
+      email:                  document.getElementById('email').value.trim(),
+      pec:                    document.getElementById('pec').value.trim(),
+      cf_piva:                document.getElementById('cf-piva').value.trim(),
+      indirizzo_fatturazione: document.getElementById('indirizzo-fatt').value.trim(),
+      percorso:               percorsoTesto || document.getElementById('percorso').value,
+      note:                   document.getElementById('note').value.trim(),
+      servizio:               'DWG → BIM & Rendering',
+      pacchetto:              window._bimPercorsoLabel
+                               ? (window._bimPercorsoLabel + (pacchettoCalc ? ' — ' + pacchettoCalc : ''))
+                               : (percorsoTesto || ''),
+      preventivo_totale:      window._bimPreventivoTotale || '',
+      preventivo_dettaglio:   window._bimPreventivoDettaglio || '',
+      preventivo_image:       window.preventivoImageBase64 || null,
+      attachment: { name: attachmentName, size: attachmentSize, base64: attachmentBase64 },
+      timestamp: new Date().toISOString()
+    };
+
+    setProgress(70, 'Trasmissione al server…');
+
+    try {
+      const response = await fetch(GAS_ENDPOINT, {
+        method:   'POST',
+        redirect: 'follow',
+        body:     JSON.stringify(payload)
+      });
+      setProgress(95, 'Verifica risposta…');
+      if (!response.ok && response.type !== 'opaque') {
+        throw new Error(`Risposta server: ${response.status} ${response.statusText}`);
+      }
+      setProgress(100, 'Completato.');
+      await new Promise(r => setTimeout(r, 600));
+      const ref  = 'PEG-' + Date.now().toString(36).toUpperCase();
+      const data = new Date().toLocaleString('it-IT', {
+        day:'2-digit', month:'2-digit', year:'numeric',
+        hour:'2-digit', minute:'2-digit'
+      });
+      document.getElementById('ov-protocol').innerHTML =
+        `Ref.: <strong>${ref}</strong><br>Data: ${data}`;
+
+      showOverlay('success');
+
+    } catch (err) {
+      document.getElementById('ov-error-detail').textContent =
+        'Errore di rete. Verificare la connessione e riprovare. Dettaglio: ' + err.message;
+      showOverlay('error');
+    }
+  });
+</script>
+
+</body>
+</html>
