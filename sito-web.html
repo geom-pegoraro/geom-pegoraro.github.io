@@ -643,12 +643,12 @@
     for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++) {
       if(Math.abs(nodes[i].layer-nodes[j].layer)>0.01)continue;
       const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<MAX_DIST){const a=(1-dist/MAX_DIST)*nodes[i].alpha*0.6;ctx.lineWidth=0.7;drawGradientLine(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y,nodes[i].col,nodes[j].col,a);}
+      if(dist<MAX_DIST){const a=(1-dist/MAX_DIST)*nodes[i].alpha*0.6;ctx.lineWidth=1.2;drawGradientLine(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y,nodes[i].col,nodes[j].col,a);}
     }
     const HUB_DIST=220;
-    for(const h of hubs) for(const n of nodes){const dx=h.x-n.x,dy=h.y-n.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<HUB_DIST){ctx.lineWidth=0.6;drawGradientLine(h.x,h.y,n.x,n.y,h.col,n.col,(1-dist/HUB_DIST)*0.28);}}
+    for(const h of hubs) for(const n of nodes){const dx=h.x-n.x,dy=h.y-n.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<HUB_DIST){ctx.lineWidth=1.0;drawGradientLine(h.x,h.y,n.x,n.y,h.col,n.col,(1-dist/HUB_DIST)*0.28);}}
     for(const n of nodes){n.r=n.baseR+Math.sin(t*n.pulseSpeed/0.012+n.pulsePhase)*n.baseR*0.35;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba('+n.col+','+n.alpha+')';ctx.fill();if(n.baseR>1.8){ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);const glow=ctx.createRadialGradient(n.x,n.y,n.r*0.5,n.x,n.y,n.r*2.5);glow.addColorStop(0,'rgba('+n.col+','+(n.alpha*0.3)+')');glow.addColorStop(1,'rgba('+n.col+',0)');ctx.fillStyle=glow;ctx.fill();}n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
-    for(const h of hubs){h.ringPhase+=0.008;const ringR=h.r+6+Math.sin(h.ringPhase)*4,ringAlpha=0.08+Math.sin(h.ringPhase)*0.05;ctx.beginPath();ctx.arc(h.x,h.y,ringR,0,Math.PI*2);ctx.strokeStyle='rgba('+h.col+','+ringAlpha+')';ctx.lineWidth=1.2;ctx.stroke();const ring2R=h.r+14+Math.sin(h.ringPhase+1)*6;ctx.beginPath();ctx.arc(h.x,h.y,ring2R,0,Math.PI*2);ctx.strokeStyle='rgba('+h.col+','+(ringAlpha*0.5)+')';ctx.lineWidth=0.7;ctx.stroke();const grad=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r*4);grad.addColorStop(0,'rgba('+h.col+',0.55)');grad.addColorStop(0.4,'rgba('+h.col+',0.15)');grad.addColorStop(1,'rgba('+h.col+',0)');ctx.beginPath();ctx.arc(h.x,h.y,h.r*4,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.beginPath();ctx.arc(h.x,h.y,h.r,0,Math.PI*2);ctx.fillStyle='rgba('+h.col+',0.75)';ctx.fill();h.x+=h.vx;h.y+=h.vy;if(h.x<0||h.x>W)h.vx*=-1;if(h.y<0||h.y>H)h.vy*=-1;}
+    for(const h of hubs){h.ringPhase+=0.008;const ringR=h.r+6+Math.sin(h.ringPhase)*4,ringAlpha=0.08+Math.sin(h.ringPhase)*0.05;ctx.beginPath();ctx.arc(h.x,h.y,ringR,0,Math.PI*2);ctx.strokeStyle='rgba('+h.col+','+ringAlpha+')';ctx.lineWidth=1.2;ctx.stroke();const ring2R=h.r+14+Math.sin(h.ringPhase+1)*6;ctx.beginPath();ctx.arc(h.x,h.y,ring2R,0,Math.PI*2);ctx.strokeStyle='rgba('+h.col+','+(ringAlpha*0.5)+')';ctx.lineWidth=1.2;ctx.stroke();const grad=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r*4);grad.addColorStop(0,'rgba('+h.col+',0.55)');grad.addColorStop(0.4,'rgba('+h.col+',0.15)');grad.addColorStop(1,'rgba('+h.col+',0)');ctx.beginPath();ctx.arc(h.x,h.y,h.r*4,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();ctx.beginPath();ctx.arc(h.x,h.y,h.r,0,Math.PI*2);ctx.fillStyle='rgba('+h.col+',0.75)';ctx.fill();const MIN_HUB_DIST=180;for(const other of hubs){if(other===h)continue;const odx=h.x-other.x,ody=h.y-other.y,odist=Math.sqrt(odx*odx+ody*ody);if(odist<MIN_HUB_DIST&&odist>0){const force=(MIN_HUB_DIST-odist)/MIN_HUB_DIST*0.04;h.vx+=odx/odist*force;h.vy+=ody/odist*force;}}const maxV=0.5,spd=Math.sqrt(h.vx*h.vx+h.vy*h.vy);if(spd>maxV){h.vx=h.vx/spd*maxV;h.vy=h.vy/spd*maxV;}h.x+=h.vx;h.y+=h.vy;if(h.x<0||h.x>W)h.vx*=-1;if(h.y<0||h.y>H)h.vy*=-1;}
     requestAnimationFrame(draw);
   }
   window.addEventListener('resize',resize);
@@ -807,3 +807,4 @@
 
 </body>
 </html>
+
