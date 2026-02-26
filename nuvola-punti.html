@@ -699,7 +699,7 @@
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < MAX_DIST) {
           const a = (1 - dist/MAX_DIST) * nodes[i].alpha * 0.6;
-          ctx.lineWidth = 0.7;
+          ctx.lineWidth = 1.2;
           drawGradientLine(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y, nodes[i].col, nodes[j].col, a);
         }
       }
@@ -713,7 +713,7 @@
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < HUB_DIST) {
           const a = (1 - dist/HUB_DIST) * 0.28;
-          ctx.lineWidth = 0.6;
+          ctx.lineWidth = 1.0;
           drawGradientLine(h.x, h.y, n.x, n.y, h.col, n.col, a);
         }
       }
@@ -763,7 +763,7 @@
       ctx.beginPath();
       ctx.arc(h.x, h.y, ring2R, 0, Math.PI*2);
       ctx.strokeStyle = 'rgba(' + h.col + ',' + (ringAlpha * 0.5) + ')';
-      ctx.lineWidth = 0.7;
+      ctx.lineWidth = 1.2;
       ctx.stroke();
 
       // Core glow
@@ -781,6 +781,23 @@
       ctx.arc(h.x, h.y, h.r, 0, Math.PI*2);
       ctx.fillStyle = 'rgba(' + h.col + ',0.75)';
       ctx.fill();
+
+      // Repulsione tra hub: mantieni distanza minima
+      const MIN_HUB_DIST = 180;
+      for (const other of hubs) {
+        if (other === h) continue;
+        const dx = h.x - other.x, dy = h.y - other.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MIN_HUB_DIST && dist > 0) {
+          const force = (MIN_HUB_DIST - dist) / MIN_HUB_DIST * 0.04;
+          h.vx += (dx / dist) * force;
+          h.vy += (dy / dist) * force;
+        }
+      }
+      // Limita velocità massima
+      const maxV = 0.5;
+      const speed = Math.sqrt(h.vx*h.vx + h.vy*h.vy);
+      if (speed > maxV) { h.vx = h.vx/speed*maxV; h.vy = h.vy/speed*maxV; }
 
       h.x += h.vx; h.y += h.vy;
       if (h.x < 0 || h.x > W) h.vx *= -1;
@@ -1071,3 +1088,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
+
