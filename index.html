@@ -5,8 +5,8 @@
 <meta name="google-site-verification" content="PvFlcJvZZcUBUPBZR2412XgROXO1PQ1OYUPyqXOpcNA">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Geom. Pegoraro Alex — Servizi Tecnici Grafici | Tavole Sinottiche, BIM, Nuvola di Punti</title>
-<meta name="description" content="Geom. Alex Pegoraro offre supporto grafico tecnico professionale: tavole sinottiche stato di fatto/progetto, conversione DWG in BIM e rendering fotorealistici, rilievo laser scanner nuvola di punti. Consegna in 24h. P.IVA 04505080244.">
-<meta name="keywords" content="geometra supporto grafico tecnico, tavole sinottiche stato di fatto progetto, conversione DWG BIM Revit IFC, rendering fotorealistico architettura, nuvola di punti laser scanner, Leica BLK360, rilievo architettonico, supporto progettazione edilizia, geometra Veneto">
+<meta name="description" content="Geom. Alex Pegoraro offre supporto grafico tecnico professionale: tavole sinottiche stato di fatto/progetto, conversione DWG in BIM e rendering fotorealistici, rilievo laser scanner nuvola di punti. Consulenza privati per pratiche edilizie e catastali. P.IVA 04505080244.">
+<meta name="keywords" content="geometra supporto grafico tecnico, pratiche edilizie catastali privati, geometra consulenza privati, tavole sinottiche stato di fatto progetto, conversione DWG BIM Revit IFC, rendering fotorealistico architettura, nuvola di punti laser scanner, Leica BLK360, rilievo architettonico, geometra Veneto">
 <meta name="author" content="Geom. Alex Pegoraro">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://geom-pegoraro.github.io/">
@@ -34,21 +34,25 @@
     --mono:   'DM Mono', monospace;
     --r:      3px;
 
+    --c-privati:      #1a8a5a;
+    --c-privati-s:    rgba(26,138,90,0.13);
+    --c-privati-b:    rgba(26,138,90,0.45);
+
     --c-sinottiche:   #c0392b;
-    --c-sinottiche-s: rgba(192,57,43,0.10);
-    --c-sinottiche-b: rgba(192,57,43,0.28);
+    --c-sinottiche-s: rgba(192,57,43,0.12);
+    --c-sinottiche-b: rgba(192,57,43,0.40);
 
     --c-bimrender:    #1a5fa8;
-    --c-bimrender-s:  rgba(26,95,168,0.10);
-    --c-bimrender-b:  rgba(26,95,168,0.28);
+    --c-bimrender-s:  rgba(26,95,168,0.12);
+    --c-bimrender-b:  rgba(26,95,168,0.40);
 
     --c-nuvola:       #8b4fa8;
-    --c-nuvola-s:     rgba(139,79,168,0.10);
-    --c-nuvola-b:     rgba(139,79,168,0.28);
+    --c-nuvola-s:     rgba(139,79,168,0.12);
+    --c-nuvola-b:     rgba(139,79,168,0.40);
 
     --c-sitepro:      #a08c1a;
-    --c-sitepro-s:    rgba(160,140,26,0.10);
-    --c-sitepro-b:    rgba(160,140,26,0.28);
+    --c-sitepro-s:    rgba(160,140,26,0.12);
+    --c-sitepro-b:    rgba(160,140,26,0.40);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -77,7 +81,6 @@
 
   header {
     position: relative; z-index: 1;
-    border-bottom: none;
     padding: 17px 0;
   }
   .hdr {
@@ -97,40 +100,133 @@
     flex: 1;
     display: flex;
     align-items: center;
-    padding: 80px 0 60px;
+    padding: 60px 0 50px;
   }
   .hero-inner { max-width: 900px; margin: 0 auto; padding: 0 22px; width: 100%; }
   .hero-eye {
     font-weight: 400;
     font-family: var(--mono); font-size: 0.67rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
     display: flex; align-items: center; gap: 10px;
     animation: up 0.45s ease both 0.05s;
   }
   .hero-eye::before { content: ''; display: block; width: 26px; height: 1px; background: var(--dim); flex-shrink: 0; }
   .hero h1 {
     font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 600; line-height: 1.1;
-    letter-spacing: -0.03em; color: #fff; margin-bottom: 16px;
+    letter-spacing: -0.03em; color: #fff; margin-bottom: 10px;
     animation: up 0.45s ease both 0.13s;
   }
   .hero-desc {
-    font-size: 0.97rem; color: var(--muted); max-width: 520px;
-    line-height: 1.8; margin-bottom: 56px;
+    font-size: 0.92rem; color: var(--muted); max-width: 480px;
+    line-height: 1.7; margin-bottom: 44px;
     animation: up 0.45s ease both 0.21s;
   }
 
+  .section-label {
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dim); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+    animation: up 0.45s ease both 0.25s;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* PRIVATI CARD */
+  .privati-wrap {
+    margin-bottom: 28px;
+    animation: up 0.45s ease both 0.29s;
+  }
+
+  .srv-card-featured {
+    display: block; text-decoration: none;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--c-privati);
+    border-radius: var(--r);
+    padding: 30px 28px 26px;
+    transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .srv-card-featured::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--c-privati); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.22s ease;
+  }
+  .srv-card-featured:hover::before { transform: scaleX(1); }
+  .srv-card-featured:hover {
+    border-color: var(--c-privati-b);
+    background: var(--c-privati-s);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.40);
+  }
+
+  .featured-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .srv-badge {
+    display: inline-block;
+    font-family: var(--mono); font-size: 0.58rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--c-privati);
+    border: 1px solid var(--c-privati-b);
+    padding: 3px 10px; border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .srv-title-lg {
+    font-size: 1.32rem; font-weight: 600; color: #fff;
+    letter-spacing: -0.025em; margin-bottom: 9px; line-height: 1.2;
+  }
+
+  .srv-desc-lg {
+    font-weight: 400; font-size: 0.84rem; color: var(--muted);
+    line-height: 1.7; max-width: 520px;
+  }
+
+  .srv-chips {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+  }
+  .srv-chip {
+    font-family: var(--mono); font-size: 0.63rem; font-weight: 400;
+    color: var(--muted); background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 4px 11px; border-radius: 2px;
+  }
+
+  .srv-cta-lg {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #fff;
+    background: var(--c-privati);
+    padding: 10px 22px; border-radius: 2px;
+    transition: opacity 0.15s, gap 0.18s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .srv-card-featured:hover .srv-cta-lg { opacity: 0.88; gap: 15px; }
+
+  /* SERVICE CARDS */
   .servizi {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    animation: up 0.45s ease both 0.29s;
+    animation: up 0.45s ease both 0.37s;
   }
 
   .srv-card {
     display: block; text-decoration: none;
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--r); padding: 28px 24px;
-    transition: border-color 0.18s, background 0.18s, transform 0.18s;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--srv-color);
+    border-radius: var(--r);
+    padding: 26px 22px 22px;
+    transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
     cursor: pointer; position: relative; overflow: hidden;
   }
   .srv-card::before {
@@ -139,37 +235,69 @@
     transition: transform 0.22s ease;
   }
   .srv-card:hover::before { transform: scaleX(1); }
-  .srv-card:hover { border-color: var(--srv-border); background: var(--srv-bg); transform: translateY(-2px); }
+  .srv-card:hover {
+    border-color: var(--srv-border);
+    background: var(--srv-bg);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
 
   .srv-card.sinottiche { --srv-color: var(--c-sinottiche); --srv-border: var(--c-sinottiche-b); --srv-bg: var(--c-sinottiche-s); }
   .srv-card.bimrender  { --srv-color: var(--c-bimrender);  --srv-border: var(--c-bimrender-b);  --srv-bg: var(--c-bimrender-s); }
   .srv-card.nuvola     { --srv-color: var(--c-nuvola);     --srv-border: var(--c-nuvola-b);     --srv-bg: var(--c-nuvola-s); }
   .srv-card.sitepro    { --srv-color: var(--c-sitepro);    --srv-border: var(--c-sitepro-b);    --srv-bg: var(--c-sitepro-s); }
 
-  .cs-badge { display: none; }
-  .srv-tag  { display: none; }
-  .srv-title { font-size: 1.05rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; margin-bottom: 10px; line-height: 1.3; }
-  .srv-desc { font-weight: 400; font-size: 0.82rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
-  .srv-arrow { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--srv-color); display: flex; align-items: center; gap: 8px; transition: gap 0.18s; }
-  .srv-card:hover .srv-arrow { gap: 14px; }
+  .srv-title {
+    font-size: 1.08rem; font-weight: 600; color: #fff;
+    letter-spacing: -0.02em; margin-bottom: 7px; line-height: 1.3;
+  }
+  .srv-desc {
+    font-weight: 400; font-size: 0.81rem; color: var(--muted);
+    line-height: 1.65; margin-bottom: 18px;
+  }
+  .srv-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #fff;
+    background: var(--srv-color);
+    padding: 7px 16px; border-radius: 2px;
+    transition: opacity 0.15s, gap 0.18s;
+  }
+  .srv-card:hover .srv-cta { opacity: 0.88; gap: 13px; }
 
+  /* FOOTER */
   footer {
     position: relative; z-index: 1;
-    border-top: none;
     padding: 28px 0; margin-top: auto;
   }
-  .ft { max-width: 900px; margin: 0 auto; padding: 0 22px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+  .ft {
+    max-width: 900px; margin: 0 auto; padding: 0 22px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 20px; align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
   .ft-info p { font-weight: 400; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); line-height: 2.1; }
   .ft-info a { color: var(--text); text-decoration: none; }
+  .ft-info a:hover { color: #fff; text-decoration: underline; }
   .ft-name { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
-  .ft-right { font-weight: 400; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 2; }
-  .ft-legal { font-weight: 400; max-width: 900px; margin: 14px auto 0; padding: 14px 22px 0; border-top: none; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); line-height: 1.85; }
+  .ft-right {
+    font-weight: 400; font-family: var(--mono);
+    font-size: 0.72rem; color: var(--muted);
+    text-align: right; line-height: 2;
+  }
+  .ft-right .ft-legal-inline {
+    font-size: 0.60rem; color: var(--dim);
+    margin-top: 4px; line-height: 1.5;
+  }
 
   @media (max-width: 680px) {
     .servizi { grid-template-columns: 1fr; }
     .ft { grid-template-columns: 1fr; }
     .ft-right { text-align: left; }
-    .hero { padding: 50px 0 40px; }
+    .hero { padding: 40px 0 36px; }
+    .featured-inner { grid-template-columns: 1fr; }
   }
 
   @keyframes up {
@@ -196,38 +324,60 @@
 
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-eye">Supporto Tecnico Grafico Professionale</div>
+    <div class="hero-eye">Supporto Tecnico Professionale</div>
     <h1>Geom. Pegoraro Alex</h1>
-    <p class="hero-desc">Servizi di supporto grafico tecnico per studi di progettazione e professionisti del settore edilizio. Seleziona il servizio di cui hai bisogno.</p>
+    <p class="hero-desc">Seleziona il servizio di cui hai bisogno.</p>
 
+    <!-- PRIVATI -->
+    <div class="section-label">Privati</div>
+    <div class="privati-wrap">
+      <a href="privati.html" class="srv-card-featured">
+        <div class="featured-inner">
+          <div>
+            <div class="srv-badge">Servizio principale</div>
+            <div class="srv-title-lg">Pratiche Edilizie & Catastali</div>
+            <div class="srv-desc-lg">
+              Sei un privato e hai bisogno di un geometra? Contattami per pratiche edilizie, variazioni catastali, frazionamenti, accatastamenti o semplicemente per un colloquio preliminare per capire come procedere.
+            </div>
+            <div class="srv-chips">
+              <span class="srv-chip">CILA / SCIA / PDC</span>
+              <span class="srv-chip">Variazioni catastali</span>
+              <span class="srv-chip">Frazionamenti</span>
+              <span class="srv-chip">Accatastamenti</span>
+              <span class="srv-chip">Colloquio preliminare</span>
+            </div>
+          </div>
+          <div class="srv-cta-lg">Contattami →</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- SERVIZI TECNICI GRAFICI -->
+    <div class="section-label" style="animation-delay:0.33s">Servizi Tecnici Grafici</div>
     <div class="servizi">
 
-      <!-- TAVOLE SINOTTICHE -->
       <a href="tavole-sinottiche.html" class="srv-card sinottiche">
         <div class="srv-title">Tavole Sinottiche</div>
-        <div class="srv-desc">Elaborazione tavole Stato di Fatto / Progetto con differenziazione cromatica dei layer. Consegna in 24h lavorative.</div>
-        <div class="srv-arrow">Scopri il servizio →</div>
+        <div class="srv-desc">Stato di Fatto / Progetto con differenziazione cromatica. Consegna in 24h lavorative.</div>
+        <div class="srv-cta">Scopri →</div>
       </a>
 
-      <!-- DWG → BIM & RENDERING -->
       <a href="bim-rendering.html" class="srv-card bimrender">
         <div class="srv-title">DWG → BIM & Rendering</div>
-        <div class="srv-desc">Conversione da elaborati DWG a modello BIM (Revit/IFC) o render fotorealistici ad alta risoluzione. Scegli il solo rendering in PDF o il file BIM completo.</div>
-        <div class="srv-arrow">Scopri il servizio →</div>
+        <div class="srv-desc">Conversione DWG in modello BIM (Revit/IFC) o render fotorealistici ad alta risoluzione.</div>
+        <div class="srv-cta">Scopri →</div>
       </a>
 
-      <!-- RILIEVO NUVOLA DI PUNTI -->
       <a href="nuvola-punti.html" class="srv-card nuvola">
         <div class="srv-title">Rilievo Nuvola di Punti</div>
-        <div class="srv-desc">Rilievo in loco con laser scanner Leica BLK360. Restituzione nuvola di punti (E57/RCP/ISPROJ), piante e sezioni in DXF/PDF. Sopralluogo incluso nel prezzo al m².</div>
-        <div class="srv-arrow">Scopri il servizio →</div>
+        <div class="srv-desc">Rilievo in loco con laser scanner Leica BLK360. Restituzione E57/RCP, piante e sezioni DXF/PDF.</div>
+        <div class="srv-cta">Scopri →</div>
       </a>
 
-      <!-- SITEPRO GITHUB -->
       <a href="sito-web.html" class="srv-card sitepro">
         <div class="srv-title">SitePro GitHub</div>
-        <div class="srv-desc">Realizzo il tuo sito web professionale su GitHub Pages con dominio nomescelto.github.io — design dark premium, form commissione automatizzato, notifiche email e archivio Drive. Zero costi di hosting.</div>
-        <div class="srv-arrow">Scopri il servizio →</div>
+        <div class="srv-desc">Sito web professionale su GitHub Pages: design dark premium, form automatizzato, zero costi di hosting.</div>
+        <div class="srv-cta">Scopri →</div>
       </a>
 
     </div>
@@ -238,20 +388,18 @@
   <div class="ft">
     <div class="ft-info">
       <div class="ft-name">Geom. Pegoraro Alex</div>
-      <p>Email: <a href="/cdn-cgi/l/email-protection#bbcbdedcd4c9dac9d4dad7dec3dcded4d6fbdcd6dad2d795d8d4d6"><span class="__cf_email__" data-cfemail="f28297959d8093809d939e978a95979d9fb2959f939b9edc919d9f">[email&#160;protected]</span></a></p>
+      <p>Email: <a href="mailto:pegoraroalexgeom@gmail.com">pegoraroalexgeom@gmail.com</a></p>
       <p>P.IVA: 04505080244</p>
     </div>
     <div class="ft-right">
       <div>© 2025 Geom. Pegoraro Alex</div>
       <div>Servizi Tecnici Grafici</div>
+      <div class="ft-legal-inline">Servizi di esclusivo supporto grafico tecnico alla progettazione.</div>
     </div>
-  </div>
-  <div class="ft-legal">
-    Il presente sito non costituisce consulenza professionale asseverata. I servizi offerti sono di esclusivo supporto grafico tecnico alla progettazione. P.IVA 04505080244.
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 (function() {
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
@@ -369,7 +517,6 @@
       ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, Math.PI*2);
       ctx.fillStyle = 'rgba('+h.col+',0.75)'; ctx.fill();
 
-      // Repulsione tra hub: mantieni distanza minima
       const MIN_HUB_DIST = 180;
       for (const other of hubs) {
         if (other === h) continue;
@@ -381,7 +528,6 @@
           h.vy += (dy / dist) * force;
         }
       }
-      // Limita velocità massima
       const maxV = 0.5;
       const speed = Math.sqrt(h.vx*h.vx + h.vy*h.vy);
       if (speed > maxV) { h.vx = h.vx/speed*maxV; h.vy = h.vy/speed*maxV; }
@@ -401,4 +547,3 @@
 
 </body>
 </html>
-
