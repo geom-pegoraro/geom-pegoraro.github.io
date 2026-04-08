@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordine Tavola Sinottica — Geom. Alex Pegoraro</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--bg2:#161b26;--bg3:#1c2233;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#dde4f0;--muted:#6e7d96;--dim:#3d4a5e;
+  --font:'Inter',sans-serif;--mono:'DM Mono',monospace;--r:3px;
+  --red:#c0392b;--red-s:rgba(192,57,43,0.10);--red-b:rgba(192,57,43,0.30);
+  --yellow:#c9970a;--green:#1e8449;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;}
+.wrap{max-width:840px;margin:0 auto;padding:0 22px;position:relative;z-index:1;}
+
+header{position:relative;z-index:1;padding:17px 0;}
+.hdr{max-width:840px;margin:0 auto;padding:0 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.hdr-name{font-size:.9rem;font-weight:600;color:#fff;letter-spacing:-.01em;}
+.hdr-sub{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.hdr-back{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border2);padding:5px 13px;border-radius:2px;text-decoration:none;transition:color .15s,border-color .15s;}
+.hdr-back:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+
+/* HERO ordine */
+.order-hero{padding:56px 0 40px;position:relative;z-index:1;}
+.order-eye{font-family:var(--mono);font-size:.67rem;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.order-eye::before{content:'';display:block;width:26px;height:1px;background:var(--yellow);flex-shrink:0;}
+.order-h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:600;line-height:1.12;letter-spacing:-.03em;color:#fff;margin-bottom:10px;}
+.order-sub{font-size:.88rem;color:var(--muted);max-width:480px;line-height:1.75;margin-bottom:24px;}
+
+/* RIEPILOGO PREVENTIVO */
+.prev-recap{background:var(--bg2);border:1px solid var(--red-b);border-left:4px solid var(--red);border-radius:var(--r);padding:18px 22px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.prev-recap-info{font-size:.85rem;color:var(--muted);line-height:1.7;}
+.prev-recap-info strong{color:#fff;font-weight:500;display:block;margin-bottom:2px;}
+.prev-recap-price{font-size:2rem;font-weight:600;color:#fff;letter-spacing:-.03em;white-space:nowrap;}
+.prev-recap-change{font-family:var(--mono);font-size:.60rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-top:6px;display:inline-block;border-bottom:1px solid var(--red-b);}
+
+/* FORM */
+.sec{padding:0 0 40px;position:relative;z-index:1;}
+h2{font-size:1.15rem;font-weight:600;letter-spacing:-.02em;color:#fff;margin-bottom:18px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.fg.full{grid-column:1/-1;}
+.fg label{font-family:var(--mono);font-size:.60rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
+.fg label .req{color:var(--red);}
+.fg input[type="text"],.fg input[type="email"],.fg input[type="tel"],.fg textarea,.fg select{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:11px 14px;font-family:var(--font);font-size:.9rem;font-weight:400;outline:none;width:100%;transition:border-color .14s;}
+.fg select{cursor:pointer;}
+.fg select option{background:var(--bg2);}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--border2);}
+.fg textarea{resize:vertical;min-height:80px;}
+.fg input[type="file"]{background:var(--bg2);border:1px dashed var(--border);border-radius:var(--r);color:var(--muted);padding:20px 14px;font-family:var(--mono);font-size:.70rem;width:100%;cursor:pointer;transition:border-color .14s;}
+.fg input[type="file"]::file-selector-button{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);padding:7px 14px;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-right:14px;}
+.zip-info{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-top:9px;}
+.zip-info p{font-family:var(--mono);font-size:.68rem;color:var(--muted);line-height:1.9;}
+.zip-info .zy{color:var(--yellow);}
+.zip-info .zt{color:var(--text);font-weight:500;}
+.zip-error{display:none;margin-top:7px;padding:9px 13px;background:var(--red-s);border:1px solid rgba(192,57,43,.35);border-left:3px solid var(--red);border-radius:var(--r);font-family:var(--mono);font-size:.70rem;color:#e07060;line-height:1.55;}
+
+/* DISCLAIMER + CHECK */
+.disc-box{background:var(--red-s);border:1px solid var(--red-b);border-left:3px solid var(--red);border-radius:var(--r);padding:18px 22px;margin:24px 0 18px;}
+.disc-tag{font-family:var(--font);font-size:.70rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;}
+.disc-box p{font-size:.85rem;color:var(--text);line-height:1.8;}
+.disc-tag-lbl{font-family:var(--mono);font-size:.60rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.chk-row{display:flex;align-items:flex-start;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-top:9px;cursor:pointer;transition:border-color .14s;}
+.chk-row:hover{border-color:var(--border2);}
+.chk-row input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:17px;height:17px;min-width:17px;border:1px solid var(--dim);background:transparent;border-radius:2px;cursor:pointer;margin-top:2px;position:relative;transition:background .14s,border-color .14s;}
+.chk-row input[type="checkbox"]:checked{background:var(--red);border-color:var(--red);}
+.chk-row input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:10px;font-weight:700;line-height:1;}
+.chk-row label{font-size:.85rem;color:var(--muted);cursor:pointer;line-height:1.62;}
+.chk-row strong{color:var(--text);font-weight:500;}
+.submit-row{display:flex;align-items:center;gap:18px;margin-top:20px;flex-wrap:wrap;}
+button[type="submit"]{background:var(--red);color:#fff;border:1px solid var(--red);border-radius:var(--r);padding:14px 32px;font-family:var(--font);font-size:.85rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s;}
+button[type="submit"]:hover{background:transparent;color:var(--red);}
+button[type="submit"]:disabled{opacity:.45;cursor:not-allowed;}
+.submit-hint{font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.9;}
+
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:26px 0;}
+.ft{max-width:840px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;}
+.ft-info p{font-family:var(--mono);font-size:.73rem;color:var(--muted);line-height:2;}
+.ft-info a{color:var(--text);text-decoration:none;}
+.ft-name{font-size:.9rem;font-weight:600;color:#fff;margin-bottom:5px;}
+.ft-right{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:right;line-height:2;}
+.ft-legal{max-width:840px;margin:10px auto 0;padding:10px 22px 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:.63rem;color:var(--dim);line-height:1.8;}
+
+/* OVERLAY */
+#form-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(6,8,14,.97);backdrop-filter:blur(12px) saturate(.7);align-items:center;justify-content:center;flex-direction:column;padding:32px;text-align:center;}
+#form-overlay.active{display:flex;}
+.ov-card{position:relative;border:1px solid rgba(58,122,191,.18);border-radius:4px;padding:52px 56px;max-width:480px;width:100%;background:rgba(12,16,26,.85);display:flex;flex-direction:column;align-items:center;}
+.ov-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(58,122,191,.6),transparent);}
+.ov-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(100,160,220,.55);margin-bottom:32px;display:flex;align-items:center;gap:10px;}
+.ov-label::before,.ov-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(58,122,191,.3));width:40px;}
+.ov-label::after{background:linear-gradient(270deg,transparent,rgba(58,122,191,.3));}
+.ov-spinner-wrap{position:relative;width:64px;height:64px;margin-bottom:28px;}
+.ov-ring{position:absolute;inset:0;border-radius:50%;border:1px solid transparent;}
+.ov-ring-1{border-top-color:rgba(80,160,255,.9);border-right-color:rgba(80,160,255,.2);animation:spinCW 1.4s linear infinite;}
+.ov-ring-2{inset:10px;border-bottom-color:rgba(58,122,191,.7);border-left-color:rgba(58,122,191,.15);animation:spinCCW 2.1s linear infinite;}
+.ov-ring-3{inset:20px;border-top-color:rgba(140,200,255,.5);animation:spinCW 1.8s linear infinite;}
+.ov-ring-dot{position:absolute;inset:28px;background:rgba(80,160,255,.15);border-radius:50%;animation:dotPulse 2.4s ease-in-out infinite;}
+@keyframes spinCW{to{transform:rotate(360deg);}}@keyframes spinCCW{to{transform:rotate(-360deg);}}
+@keyframes dotPulse{0%,100%{opacity:.4;transform:scale(.85);}50%{opacity:1;transform:scale(1.15);}}
+.ov-title{font-size:1.05rem;font-weight:500;color:rgba(220,232,248,.92);letter-spacing:-.01em;line-height:1.5;margin-bottom:9px;}
+.ov-subtitle{font-family:var(--mono);font-size:.67rem;color:rgba(120,150,190,.7);line-height:1.9;max-width:340px;}
+.ov-progress-wrap{width:100%;height:1px;background:rgba(58,122,191,.15);margin:26px 0 10px;}
+.ov-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,rgba(40,100,200,.6),rgba(100,180,255,1));transition:width .5s cubic-bezier(.4,0,.2,1);}
+#ov-loading-detail{font-family:var(--mono);font-size:.61rem;letter-spacing:.08em;color:rgba(100,150,200,.6);text-transform:uppercase;}
+.ov-success-icon{width:62px;height:62px;border-radius:50%;border:1px solid rgba(34,201,122,.4);display:flex;align-items:center;justify-content:center;margin-bottom:26px;animation:successPop .5s cubic-bezier(.175,.885,.32,1.275) forwards;}
+.ov-checkmark{width:22px;height:12px;border-left:1.5px solid rgba(34,201,122,.9);border-bottom:1.5px solid rgba(34,201,122,.9);transform:rotate(-45deg) translate(2px,-3px);animation:drawCheck .4s ease-out .3s both;clip-path:inset(0 100% 0 0);}
+@keyframes drawCheck{to{clip-path:inset(0 0% 0 0);}}@keyframes successPop{0%{transform:scale(.6);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.ov-date{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:rgba(100,140,180,.5);border-top:1px solid rgba(58,122,191,.12);padding-top:18px;margin-top:6px;max-width:360px;line-height:2;}
+.ov-error-icon{width:62px;height:62px;border-radius:50%;border:1px solid rgba(192,57,43,.35);display:flex;align-items:center;justify-content:center;margin-bottom:26px;}
+.ov-x-line{position:relative;width:18px;height:18px;}
+.ov-x-line::before,.ov-x-line::after{content:'';position:absolute;top:50%;left:0;width:100%;height:1.5px;background:rgba(220,80,60,.85);border-radius:2px;}
+.ov-x-line::before{transform:rotate(45deg);}
+.ov-x-line::after{transform:rotate(-45deg);}
+.ov-btn-back{background:transparent;color:rgba(80,140,200,.8);border:1px solid rgba(58,122,191,.3);border-radius:3px;padding:11px 28px;font-family:var(--mono);font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;margin-top:18px;}
+.ov-btn-back:hover{border-color:rgba(80,160,255,.6);color:rgba(140,200,255,.9);}
+
+@media(max-width:680px){.form-grid{grid-template-columns:1fr;}.fg.full{grid-column:1;}.ft{grid-template-columns:1fr;}.ft-right{text-align:left;}.ov-card{padding:40px 24px;}}
+</style>
+<link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<header>
+  <div class="hdr">
+    <div>
+      <div class="hdr-name">Geom. Alex Pegoraro</div>
+      <div class="hdr-sub">Geometra · Vicenza</div>
+    </div>
+    <a href="tavole-sinottiche.html" class="hdr-back">← Modifica preventivo</a>
+  </div>
+</header>
+
+<div class="order-hero">
+  <div class="wrap">
+    <div class="order-eye">SitePro GitHub — Ordine</div>
+    <div class="order-h1">Completa il tuo ordine</div>
+    <div class="order-sub">Inserisci i dati di fatturazione e allega il file ZIP con i tuoi DWG. Riceverai la parcella definitiva entro 48h.</div>
+
+    <!-- RIEPILOGO PREVENTIVO (popolato da JS) -->
+    <div class="prev-recap" id="prev-recap">
+      <div class="prev-recap-info">
+        <strong id="recap-pacchetto">—</strong>
+        <span id="recap-dettaglio" style="font-size:.80rem;"></span>
+        <a href="tavole-sinottiche.html" class="prev-recap-change">↩ Modifica preventivo</a>
+      </div>
+      <div class="prev-recap-price" id="recap-totale">—</div>
+    </div>
+
+    <!-- FORM -->
+    <div class="sec">
+      <h2>Dati di Fatturazione</h2>
+      <form id="commessa-form">
+        <div class="form-grid">
+          <div class="fg"><label for="nome">Nome <span class="req">*</span></label><input type="text" id="nome" name="nome" required placeholder="Nome" autocomplete="given-name"></div>
+          <div class="fg"><label for="cognome">Cognome <span class="req">*</span></label><input type="text" id="cognome" name="cognome" required placeholder="Cognome" autocomplete="family-name"></div>
+          <div class="fg"><label for="telefono">Telefono <span class="req">*</span></label><input type="tel" id="telefono" name="telefono" required placeholder="Telefono" autocomplete="tel"></div>
+          <div class="fg"><label for="email">Email <span class="req">*</span></label><input type="email" id="email" name="email" required placeholder="Email" autocomplete="email"></div>
+          <div class="fg full"><label for="cf-piva">Codice Fiscale / P.IVA <span class="req">*</span></label><input type="text" id="cf-piva" name="cf_piva" required placeholder="Codice Fiscale o Partita IVA" autocomplete="off"></div>
+          <div class="fg full"><label for="indirizzo-fatt">Indirizzo di Fatturazione <span class="req">*</span></label><input type="text" id="indirizzo-fatt" name="indirizzo_fatturazione" required placeholder="Via, CAP, Città" autocomplete="street-address"></div>
+          <div class="fg full"><label for="pec">PEC <span style="color:var(--muted);font-weight:300;">(opzionale — per fattura elettronica)</span></label><input type="email" id="pec" name="pec" placeholder="Indirizzo PEC"></div>
+          <div class="fg full"><label for="note">Note e Specifiche</label><textarea id="note" name="note" placeholder="Numero tavole, layer particolari, scadenze urgenti, colori personalizzati…"></textarea></div>
+          <div class="fg full">
+            <label for="file-allegato">File ZIP <span class="req">*</span> — stato_di_fatto.dwg + progetto.dwg + layer_info.txt</label>
+            <input type="file" id="file-allegato" name="attachment" accept=".zip" required>
+            <div class="zip-error" id="zip-error">⚠ Il file selezionato non è un archivio .ZIP.</div>
+            <div class="zip-info">
+              <p>
+                <span class="zy">▸ Struttura ZIP richiesta:</span><br>
+                — <span class="zt">stato_di_fatto.dwg</span><br>
+                — <span class="zt">progetto.dwg</span> (sovrapponibile al precedente: stessa scala, stessa origine)<br>
+                — <span class="zt">layer_info.txt</span> — specifiche colori layer (se assente: Giallo = demolizioni / Rosso = nuove opere)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="disc-box" style="margin-top:28px;">
+          <div class="disc-tag">⚠ Avviso — leggere prima dell'invio</div>
+          <p>Questo è un servizio di <strong>supporto grafico tecnico</strong> e <strong>NON costituisce consulenza professionale asseverata</strong>. Le tavole prodotte sono elaborati di supporto e non sostituiscono la verifica di un professionista abilitato. Il committente rimane il solo responsabile dell'utilizzo.</p>
+        </div>
+        <div class="disc-tag-lbl">Dichiarazioni obbligatorie</div>
+        <div class="chk-row">
+          <input type="checkbox" id="chk1" required>
+          <label for="chk1">Ho letto il disclaimer. Sono consapevole che questo è un <strong>servizio grafico tecnico</strong> e resto il solo responsabile dell'utilizzo delle tavole in pratiche edilizie.</label>
+        </div>
+        <div class="chk-row">
+          <input type="checkbox" id="chk2" required>
+          <label for="chk2">I file DWG allegati sono <strong>perfettamente sovrapponibili</strong>. So che file non conformi saranno rigettati senza addebito.</label>
+        </div>
+        <div class="chk-row">
+          <input type="checkbox" id="chk3" required>
+          <label for="chk3">Acconsento al trattamento dei dati personali ai sensi del <strong>GDPR 2016/679</strong>.</label>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" id="submit-btn">Invia Commissione →</button>
+          <div class="submit-hint">Parcella entro 48h lavorative via mail.<br>Consegna entro 24h lavorative dal pagamento.</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="form-overlay">
+  <div class="ov-card">
+    <div id="ov-loading" style="display:flex;flex-direction:column;align-items:center;width:100%;">
+      <div class="ov-label">Geom. Pegoraro Alex</div>
+      <div class="ov-spinner-wrap"><div class="ov-ring ov-ring-1"></div><div class="ov-ring ov-ring-2"></div><div class="ov-ring ov-ring-3"></div><div class="ov-ring-dot"></div></div>
+      <div class="ov-title">Trasmissione in corso</div>
+      <div class="ov-subtitle">Non chiudere questa pagina.</div>
+      <div class="ov-progress-wrap"><div class="ov-progress-bar" id="ov-bar"></div></div>
+      <div id="ov-loading-detail">Preparazione pacchetto documentale…</div>
+    </div>
+    <div id="ov-success" style="display:none;flex-direction:column;align-items:center;width:100%;">
+      <div class="ov-label">Commissione Acquisita</div>
+      <div class="ov-success-icon"><div class="ov-checkmark"></div></div>
+      <div class="ov-title">Commessa ricevuta correttamente</div>
+      <div class="ov-subtitle" style="margin-top:9px;">Riceverai conferma e parcella entro <strong style="color:rgba(220,232,248,.8)">48 ore lavorative</strong>.</div>
+      <div class="ov-date" id="ov-protocol">Rif.: —<br>Data: —</div>
+    </div>
+    <div id="ov-error" style="display:none;flex-direction:column;align-items:center;width:100%;">
+      <div class="ov-label">Trasmissione Interrotta</div>
+      <div class="ov-error-icon"><div class="ov-x-line"></div></div>
+      <div class="ov-title">Errore durante l'invio</div>
+      <div class="ov-subtitle" id="ov-error-detail" style="margin-top:9px;">Verificare la connessione e riprovare.</div>
+      <button class="ov-btn-back" id="ov-back-btn">← Torna al modulo</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-info">
+      <div class="ft-name">Geom. Alex Pegoraro</div>
+      <p>Email: <a href="mailto:pegoraroalexgeom@gmail.com">pegoraroalexgeom@gmail.com</a></p>
+      <p>PEC: <a href="mailto:alex.pegoraro@geopec.it">alex.pegoraro@geopec.it</a></p>
+      <p>P.IVA: 04505080244</p>
+    </div>
+    <div class="ft-right">
+      <div>© 2026 Geom. Alex Pegoraro</div>
+      <div><a href="privacy.html" style="color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:.60rem;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--border2);padding-bottom:1px;">Privacy Policy</a></div>
+    </div>
+  </div>
+  <div class="ft-legal">Il presente sito non costituisce consulenza professionale asseverata. P.IVA 04505080244.</div>
+</footer>
+
+<!-- CANVAS (sfondo ridotto per non distrarre nel form) -->
+<script>
+(function(){
+  const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+  const PAL=["192,57,43","201,151,10"];
+  let W,H,nodes,t=0;
+  function rand(a,b){return a+Math.random()*(b-a);}
+  function pick(){return PAL[Math.floor(Math.random()*PAL.length)];}
+  function build(){nodes=[];for(let i=0;i<30;i++){const bR=rand(.5,2);nodes.push({x:rand(0,W),y:rand(0,H),vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:bR,bR,pS:rand(.008,.018),pP:rand(0,Math.PI*2),a:rand(.15,.35),c:pick()});}}
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;build();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.012;for(const n of nodes){n.r=n.bR+Math.sin(t*n.pS/.012+n.pP)*n.bR*.3;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba('+n.c+','+n.a+')';ctx.fill();n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}requestAnimationFrame(draw);}
+  window.addEventListener('resize',resize);resize();draw();
+})();
+</script>
+
+<!-- LEGGI SESSIONstorage + SUBMIT -->
+<script>
+// Popola riepilogo da sessionStorage
+(function(){
+  const pac=sessionStorage.getItem('sito-web-ordine_pacchetto')||'—';
+  const tot=sessionStorage.getItem('sito-web-ordine_totale')||'—';
+  const det=sessionStorage.getItem('sito-web-ordine_dettaglio')||'';
+  document.getElementById('recap-pacchetto').textContent=pac;
+  document.getElementById('recap-totale').textContent=tot;
+  document.getElementById('recap-dettaglio').textContent=det;
+  // Se non c'è sessione rimanda al preventivo
+  if(!sessionStorage.getItem('sito-web-ordine_pacchetto')){
+    window.location.href='tavole-sinottiche.html#calcolatore';
+  }
+})();
+
+// Validazione zip
+document.getElementById('file-allegato').addEventListener('change',function(){
+  const zE=document.getElementById('zip-error');
+  if(this.files&&this.files[0]){
+    zE.style.display=this.files[0].name.toLowerCase().endsWith('.zip')?'none':'block';
+    if(!this.files[0].name.toLowerCase().endsWith('.zip'))this.value='';
+  }
+});
+
+// Submit
+const GAS='https://script.google.com/macros/s/AKfycbzyT_DossdKQQmnAZ57vBknnUuq6JDx5-5GsesO_FkN5GtYc_DrQHCXheApeS67jyuj/exec';
+function f2b(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Lettura file fallita'));r.readAsDataURL(file);});}
+function showOv(s){const ov=document.getElementById('form-overlay');ov.classList.add('active');document.getElementById('ov-loading').style.display=s==='loading'?'flex':'none';document.getElementById('ov-success').style.display=s==='success'?'flex':'none';document.getElementById('ov-error').style.display=s==='error'?'flex':'none';}
+function setP(p,l){document.getElementById('ov-bar').style.width=p+'%';if(l)document.getElementById('ov-loading-detail').textContent=l;}
+document.getElementById('ov-back-btn').addEventListener('click',function(){document.getElementById('form-overlay').classList.remove('active');document.getElementById('submit-btn').disabled=false;document.getElementById('ov-bar').style.width='0%';});
+
+document.getElementById('commessa-form').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const form=e.target,btn=document.getElementById('submit-btn');
+  if(!form.checkValidity()){form.reportValidity();return;}
+  const fe=document.getElementById('file-allegato');
+  if(!fe.files||!fe.files[0]){document.getElementById('zip-error').style.display='block';return;}
+  if(!fe.files[0].name.toLowerCase().endsWith('.zip')){document.getElementById('zip-error').style.display='block';fe.value='';return;}
+  document.getElementById('zip-error').style.display='none';
+  btn.disabled=true;showOv('loading');setP(5,'Lettura documentale…');
+  let b64=null,fname=null,fsize=null;
+  try{setP(20,'Codifica pacchetto dati…');b64=await f2b(fe.files[0]);fname=fe.files[0].name;fsize=fe.files[0].size;setP(55,'File allegato elaborato…');}
+  catch(err){document.getElementById('ov-error-detail').textContent='Impossibile leggere il file. Verificare che non sia corrotto.';showOv('error');return;}
+  const payload={
+    nome:document.getElementById('nome').value.trim(),
+    cognome:document.getElementById('cognome').value.trim(),
+    telefono:document.getElementById('telefono').value.trim(),
+    email:document.getElementById('email').value.trim(),
+    pec:document.getElementById('pec').value.trim(),
+    cf_piva:document.getElementById('cf-piva').value.trim(),
+    indirizzo_fatturazione:document.getElementById('indirizzo-fatt').value.trim(),
+    note:document.getElementById('note').value.trim(),
+    servizio:'SitePro GitHub',
+    pacchetto:sessionStorage.getItem('sito-web-ordine_pacchetto')||'—',
+    preventivo_totale:sessionStorage.getItem('sito-web-ordine_totale')||'—',
+    preventivo_dettaglio:sessionStorage.getItem('sito-web-ordine_dettaglio')||'—',
+    attachment:{name:fname,size:fsize,base64:b64},
+    timestamp:new Date().toISOString()
+  };
+  setP(70,'Invio dati al server…');
+  try{
+    const res=await fetch(GAS,{method:'POST',redirect:'follow',body:JSON.stringify(payload)});
+    setP(95,'Verifica risposta…');
+    if(!res.ok&&res.type!=='opaque')throw new Error('Server: '+res.status);
+    setP(100,'Archiviazione completata.');
+    await new Promise(r=>setTimeout(r,600));
+    const ref='PEG-'+Date.now().toString(36).toUpperCase();
+    const data=new Date().toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    document.getElementById('ov-protocol').innerHTML='Ref.: <strong>'+ref+'</strong><br>Data: '+data;
+    sessionStorage.clear();
+    showOv('success');
+  }catch(err){
+    document.getElementById('ov-error-detail').textContent='Errore di rete. Verificare la connessione e riprovare. Dettaglio: '+err.message;
+    showOv('error');
+  }
+});
+</script>
+</body>
+</html>

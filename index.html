@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="PvFlcJvZZcUBUPBZR2412XgROXO1PQ1OYUPyqXOpcNA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometra Alex Pegoraro — Vicenza | Tavole Sinottiche, BIM, Nuvola di Punti</title>
+<meta name="description" content="Geom. Alex Pegoraro, geometra a Vicenza. Tavole sinottiche in 24h, BIM, rendering, nuvola di punti con Leica BLK360 e pratiche edilizie per privati. P.IVA 04505080244.">
+<meta name="keywords" content="geometra Vicenza, geometra Veneto, pratiche edilizie Vicenza, tavole sinottiche, BIM Revit IFC, rendering fotorealistico, nuvola di punti laser scanner, Leica BLK360, geometra Monte di Malo">
+<meta name="author" content="Geom. Alex Pegoraro">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://geom-pegoraro.github.io/">
+<meta property="og:title" content="Geometra Alex Pegoraro — Vicenza">
+<meta property="og:description" content="Tavole sinottiche, BIM, rendering e nuvola di punti. Geometra a Vicenza.">
+<meta property="og:url" content="https://geom-pegoraro.github.io/">
+<meta property="og:type" content="website"><meta property="og:locale" content="it_IT">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--bg2:#161b26;--bg3:#1c2233;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#dde4f0;--muted:#6e7d96;--dim:#3d4a5e;
+  --font:'Inter',sans-serif;--mono:'DM Mono',monospace;--r:3px;
+  --cp:#1a8a5a;--cp-s:rgba(26,138,90,0.13);--cp-b:rgba(26,138,90,0.45);
+  --cs:#c0392b;--cs-s:rgba(192,57,43,0.12);--cs-b:rgba(192,57,43,0.40);
+  --cb:#1a5fa8;--cb-s:rgba(26,95,168,0.12);--cb-b:rgba(26,95,168,0.40);
+  --cn:#8b4fa8;--cn-s:rgba(139,79,168,0.12);--cn-b:rgba(139,79,168,0.40);
+  --cw:#a08c1a;--cw-s:rgba(160,140,26,0.12);--cw-b:rgba(160,140,26,0.40);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;}
+
+/* VIDEO BG */
+#bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
+#bg-video{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s;}
+#bg-video.loaded{opacity:0.20;}
+#bg-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+#bg-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(15,17,23,0.50) 0%,rgba(15,17,23,0.10) 45%,rgba(15,17,23,0.65) 100%);}
+
+/* HEADER */
+header{position:relative;z-index:2;padding:17px 0;}
+.hdr{max-width:900px;margin:0 auto;padding:0 22px;display:flex;justify-content:space-between;align-items:center;}
+.hdr-name{font-size:0.9rem;font-weight:600;color:#fff;letter-spacing:-0.01em;}
+.hdr-sub{font-family:var(--mono);font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+.hdr-pill{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border2);padding:5px 13px;border-radius:2px;display:flex;align-items:center;gap:8px;}
+.vid-dot{width:7px;height:7px;border-radius:50%;background:#e05050;flex-shrink:0;display:none;animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* HERO */
+.hero{position:relative;z-index:2;flex:1;display:flex;align-items:center;padding:72px 0 56px;min-height:100vh;}
+.hero-inner{max-width:900px;margin:0 auto;padding:0 22px;width:100%;}
+.hero-eye{font-family:var(--mono);font-size:0.67rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.40);margin-bottom:14px;display:flex;align-items:center;gap:10px;animation:up .5s ease both .05s;}
+.hero-eye::before{content:'';width:26px;height:1px;background:rgba(255,255,255,0.22);flex-shrink:0;}
+.hero h1{font-size:clamp(2.4rem,5.5vw,4rem);font-weight:600;line-height:1.06;letter-spacing:-0.04em;color:#fff;margin-bottom:12px;text-shadow:0 2px 40px rgba(0,0,0,0.55);animation:up .5s ease both .12s;}
+.hero-sub{font-size:0.88rem;color:rgba(221,228,240,0.60);max-width:420px;line-height:1.75;margin-bottom:36px;animation:up .5s ease both .20s;}
+.trust-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:46px;animation:up .5s ease both .28s;}
+.trust-item{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:0.61rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(221,228,240,0.45);}
+.trust-dot{width:5px;height:5px;border-radius:50%;background:var(--cp);flex-shrink:0;}
+
+/* LABELS */
+.section-label{font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* CARD PRIVATI */
+.privati-wrap{margin-bottom:22px;animation:up .5s ease both .29s;}
+.srv-card-featured{display:block;text-decoration:none;background:rgba(22,27,38,0.84);backdrop-filter:blur(10px);border:1px solid var(--border);border-left:4px solid var(--cp);border-radius:var(--r);padding:24px 22px 20px;transition:border-color .18s,background .18s,transform .18s,box-shadow .18s;position:relative;overflow:hidden;}
+.srv-card-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cp);transform:scaleX(0);transform-origin:left;transition:transform .22s ease;}
+.srv-card-featured:hover::before{transform:scaleX(1);}
+.srv-card-featured:hover{border-color:var(--cp-b);background:rgba(26,138,90,0.10);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.40);}
+.featured-inner{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;}
+.srv-badge{display:inline-block;font-family:var(--mono);font-size:0.57rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--cp);border:1px solid var(--cp-b);padding:3px 9px;border-radius:2px;margin-bottom:7px;}
+.srv-title-lg{font-size:1.22rem;font-weight:600;color:#fff;letter-spacing:-0.025em;margin-bottom:5px;}
+.srv-desc-lg{font-size:0.82rem;color:var(--muted);line-height:1.65;max-width:500px;}
+.srv-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+.srv-chip{font-family:var(--mono);font-size:0.60rem;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:3px 9px;border-radius:2px;}
+.srv-cta-lg{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#fff;background:var(--cp);padding:10px 20px;border-radius:2px;transition:opacity .15s,gap .18s;white-space:nowrap;flex-shrink:0;}
+.srv-card-featured:hover .srv-cta-lg{opacity:.88;gap:14px;}
+
+/* SERVICE CARDS */
+.servizi{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;animation:up .5s ease both .37s;}
+.srv-card{display:block;text-decoration:none;background:rgba(22,27,38,0.84);backdrop-filter:blur(10px);border:1px solid var(--border);border-left:3px solid var(--sc);border-radius:var(--r);padding:20px 18px 16px;transition:border-color .18s,background .18s,transform .18s,box-shadow .18s;position:relative;overflow:hidden;}
+.srv-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc);transform:scaleX(0);transform-origin:left;transition:transform .22s ease;}
+.srv-card:hover::before{transform:scaleX(1);}
+.srv-card:hover{border-color:var(--sb);background:var(--sbs);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35);}
+.srv-card.sinottiche{--sc:var(--cs);--sb:var(--cs-b);--sbs:var(--cs-s);}
+.srv-card.bimrender{--sc:var(--cb);--sb:var(--cb-b);--sbs:var(--cb-s);}
+.srv-card.nuvola{--sc:var(--cn);--sb:var(--cn-b);--sbs:var(--cn-s);}
+.srv-card.sitepro{--sc:var(--cw);--sb:var(--cw-b);--sbs:var(--cw-s);}
+.srv-title{font-size:1.03rem;font-weight:600;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;}
+.srv-desc{font-size:0.79rem;color:var(--muted);line-height:1.60;margin-bottom:13px;}
+.srv-kpis{display:flex;gap:14px;margin-bottom:13px;}
+.srv-kpi{font-family:var(--mono);font-size:0.63rem;color:var(--sc);}
+.srv-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#fff;background:var(--sc);padding:7px 14px;border-radius:2px;transition:opacity .15s,gap .18s;}
+.srv-card:hover .srv-cta{opacity:.88;gap:12px;}
+
+/* CHI SONO */
+.chisono-wrap{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:0 22px 56px;}
+.chisono-card{background:rgba(22,27,38,0.88);backdrop-filter:blur(10px);border:1px solid var(--border);border-top:3px solid var(--cp);border-radius:var(--r);padding:24px 22px;display:grid;grid-template-columns:60px 1fr;gap:20px;align-items:start;}
+.chisono-av{width:60px;height:60px;border-radius:50%;background:var(--cp-s);border:1px solid var(--cp-b);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:600;color:var(--cp);flex-shrink:0;}
+.chisono-name{font-size:0.98rem;font-weight:600;color:#fff;letter-spacing:-0.02em;margin-bottom:3px;}
+.chisono-role{font-family:var(--mono);font-size:0.61rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cp);margin-bottom:9px;}
+.chisono-bio{font-size:0.82rem;color:var(--muted);line-height:1.72;margin-bottom:11px;}
+.chisono-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.chisono-tag{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:3px 9px;border-radius:2px;}
+
+/* FOOTER */
+footer{position:relative;z-index:2;padding:28px 0;margin-top:auto;}
+.ft{max-width:900px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;border-top:1px solid var(--border);padding-top:24px;}
+.ft-info p{font-family:var(--mono);font-size:0.75rem;color:var(--muted);line-height:2.1;}
+.ft-info a{color:var(--text);text-decoration:none;}
+.ft-info a:hover{color:#fff;}
+.ft-name{font-size:0.92rem;font-weight:600;color:#fff;margin-bottom:6px;}
+.ft-right{font-family:var(--mono);font-size:0.70rem;color:var(--muted);text-align:right;line-height:2.1;}
+
+@media(max-width:680px){
+  .servizi{grid-template-columns:1fr;}
+  .ft{grid-template-columns:1fr;}
+  .ft-right{text-align:left;}
+  .hero{padding:48px 0 40px;min-height:auto;}
+  .featured-inner{grid-template-columns:1fr;}
+  .srv-cta-lg{display:none;}
+  .chisono-card{grid-template-columns:1fr;}
+  .chisono-av{display:none;}
+}
+@keyframes up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+</head>
+<body>
+
+<!-- VIDEO BG -->
+<div id="bg-wrap">
+  <!--
+    ══════════════════════════════════════════════════════
+    ISTRUZIONI PER IL VIDEO DI SFONDO
+    ══════════════════════════════════════════════════════
+    1. Carica un video (rilievo laser, cantiere, drone, rendering BIM)
+       Come file: bg-video.mp4  nella stessa cartella del sito su GitHub
+    2. Decommenta le due righe <source> qui sotto
+    3. Il video parte automaticamente in loop, senza audio, senza controlli
+    4. Se il video non viene trovato, si attiva automaticamente
+       l'animazione canvas come fallback
+
+    Formato consigliato: .mp4 H.264, 1920×1080, 20-40 sec, senza audio
+    ══════════════════════════════════════════════════════
+  -->
+  <video id="bg-video" autoplay muted loop playsinline preload="none">
+    <!-- <source src="bg-video.mp4" type="video/mp4"> -->
+    <!-- <source src="bg-video.webm" type="video/webm"> -->
+  </video>
+  <canvas id="bg-canvas"></canvas>
+  <div id="bg-overlay"></div>
+</div>
+
+<header>
+  <div class="hdr">
+    <div>
+      <div class="hdr-name">Geom. Alex Pegoraro</div>
+      <div class="hdr-sub">Geometra · Vicenza</div>
+    </div>
+    <div class="hdr-pill"><span class="vid-dot" id="vid-dot"></span>P.IVA 04505080244</div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Geometra · Monte di Malo (VI)</div>
+    <h1>Geom. Alex<br>Pegoraro</h1>
+    <p class="hero-sub">Tavole sinottiche in 24h · BIM &amp; Rendering · Nuvola di Punti · Pratiche Edilizie</p>
+    <div class="trust-row">
+      <div class="trust-item"><div class="trust-dot"></div>Consegna 24h garantita</div>
+      <div class="trust-item"><div class="trust-dot"></div>Leica BLK360</div>
+      <div class="trust-item"><div class="trust-dot"></div>Fattura P.IVA</div>
+      <div class="trust-item"><div class="trust-dot"></div>Colloquio gratuito</div>
+    </div>
+
+    <div class="section-label">Privati</div>
+    <div class="privati-wrap">
+      <a href="privati.html" class="srv-card-featured">
+        <div class="featured-inner">
+          <div>
+            <div class="srv-badge">Servizio principale</div>
+            <div class="srv-title-lg">Pratiche Edilizie &amp; Catastali</div>
+            <div class="srv-desc-lg">Hai bisogno di un geometra? CILA, SCIA, PDC, variazioni catastali, frazionamenti. Colloquio preliminare gratuito.</div>
+            <div class="srv-chips">
+              <span class="srv-chip">CILA / SCIA / PDC</span>
+              <span class="srv-chip">Variazioni catastali</span>
+              <span class="srv-chip">Frazionamenti</span>
+              <span class="srv-chip">Accatastamenti</span>
+            </div>
+          </div>
+          <div class="srv-cta-lg">Contattami →</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-label" style="animation-delay:.33s">Servizi Tecnici Grafici</div>
+    <div class="servizi">
+      <a href="tavole-sinottiche.html" class="srv-card sinottiche">
+        <div class="srv-title">Tavole Sinottiche</div>
+        <div class="srv-desc">Stato di Fatto / Progetto con differenziazione cromatica.</div>
+        <div class="srv-kpis"><span class="srv-kpi">24h</span><span class="srv-kpi">DWG+PDF</span><span class="srv-kpi">da 55€</span></div>
+        <div class="srv-cta">Calcola preventivo →</div>
+      </a>
+      <a href="bim-rendering.html" class="srv-card bimrender">
+        <div class="srv-title">DWG → BIM &amp; Rendering</div>
+        <div class="srv-desc">Modello BIM parametrico (Revit/IFC) o render fotorealistici 4K.</div>
+        <div class="srv-kpis"><span class="srv-kpi">IFC</span><span class="srv-kpi">4K</span><span class="srv-kpi">da 105€</span></div>
+        <div class="srv-cta">Calcola preventivo →</div>
+      </a>
+      <a href="nuvola-punti.html" class="srv-card nuvola">
+        <div class="srv-title">Nuvola di Punti</div>
+        <div class="srv-desc">Rilievo in loco con Leica BLK360. Restituzione E57/RCP, piante e sezioni.</div>
+        <div class="srv-kpis"><span class="srv-kpi">360°</span><span class="srv-kpi">±6mm</span><span class="srv-kpi">da 3.85€/m²</span></div>
+        <div class="srv-cta">Richiedi preventivo →</div>
+      </a>
+      <a href="sito-web.html" class="srv-card sitepro">
+        <div class="srv-title">SitePro GitHub</div>
+        <div class="srv-desc">Sito web professionale su GitHub Pages. Design dark premium, zero hosting.</div>
+        <div class="srv-kpis"><span class="srv-kpi">0€/anno</span><span class="srv-kpi">7gg</span><span class="srv-kpi">da 425€</span></div>
+        <div class="srv-cta">Scopri →</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="chisono-wrap">
+  <div class="section-label" style="margin-bottom:14px;">Chi sono</div>
+  <div class="chisono-card">
+    <div class="chisono-av">AP</div>
+    <div>
+      <div class="chisono-name">Geom. Alex Pegoraro</div>
+      <div class="chisono-role">Geometra · Monte di Malo (VI) · Veneto</div>
+      <div class="chisono-bio">Geometra con P.IVA specializzato in servizi tecnici grafici per studi di progettazione e privati. Lavoro completamente in digitale: dalla commissione alla consegna, tutto via email e cloud.</div>
+      <div class="chisono-tags">
+        <span class="chisono-tag">P.IVA 04505080244</span>
+        <span class="chisono-tag">Geometra abilitato</span>
+        <span class="chisono-tag">Monte di Malo · VI</span>
+        <span class="chisono-tag">Regime forfettario</span>
+        <span class="chisono-tag">CIPAG iscritto</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-info">
+      <div class="ft-name">Geom. Alex Pegoraro</div>
+      <p>Email: <a href="mailto:pegoraroalexgeom@gmail.com">pegoraroalexgeom@gmail.com</a></p>
+      <p>Tel / WA: <a href="https://wa.me/393246303270">+39 324 630 3270</a></p>
+      <p>P.IVA: 04505080244</p>
+    </div>
+    <div class="ft-right">
+      <div>© 2026 Geom. Alex Pegoraro</div>
+      <div>Geometra · Vicenza</div>
+      <div style="margin-top:6px;"><a href="privacy.html" style="color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:0.60rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border2);padding-bottom:1px;">Privacy Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const vid = document.getElementById('bg-video');
+  const dot = document.getElementById('vid-dot');
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  // Canvas fallback animato
+  const PAL = ["192,57,43","220,100,80","26,95,168","58,155,212","139,79,168","26,138,90"];
+  let W,H,nodes,hubs,t=0,animRunning=false;
+  function rand(a,b){return a+Math.random()*(b-a);}
+  function pick(){return PAL[Math.floor(Math.random()*PAL.length)];}
+  function build(){
+    nodes=[];
+    const L=[{n:18,s:.12,r1:.5,r2:1.2,a:.30},{n:28,s:.26,r1:.8,r2:2.0,a:.45},{n:14,s:.48,r1:1.2,r2:3.2,a:.58}];
+    for(const l of L)for(let i=0;i<l.n;i++){const bR=rand(l.r1,l.r2);nodes.push({x:rand(0,W),y:rand(0,H),vx:(Math.random()-.5)*l.s,vy:(Math.random()-.5)*l.s,r:bR,bR,pS:rand(.008,.022),pP:rand(0,Math.PI*2),a:l.a,c:pick(),ly:l.s});}
+    hubs=[];for(let i=0;i<5;i++)hubs.push({x:rand(W*.1,W*.9),y:rand(H*.1,H*.9),vx:(Math.random()-.5)*.08,vy:(Math.random()-.5)*.08,r:rand(3.5,6),rP:rand(0,Math.PI*2),c:pick()});
+  }
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;build();}
+  function dgl(x1,y1,x2,y2,c1,c2,a){const g=ctx.createLinearGradient(x1,y1,x2,y2);g.addColorStop(0,'rgba('+c1+','+a+')');g.addColorStop(1,'rgba('+c2+','+a+')');ctx.beginPath();ctx.strokeStyle=g;ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const vg=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.65);
+    vg.addColorStop(0,'rgba(15,17,23,0)');vg.addColorStop(.6,'rgba(15,17,23,.28)');vg.addColorStop(1,'rgba(15,17,23,.62)');
+    ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);t+=.012;
+    const MD=150;
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){if(Math.abs(nodes[i].ly-nodes[j].ly)>.01)continue;const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD){ctx.lineWidth=1.2;dgl(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y,nodes[i].c,nodes[j].c,(1-d/MD)*nodes[i].a*.6);}}
+    const HD=220;
+    for(const h of hubs)for(const n of nodes){const dx=h.x-n.x,dy=h.y-n.y,d=Math.sqrt(dx*dx+dy*dy);if(d<HD){ctx.lineWidth=1;dgl(h.x,h.y,n.x,n.y,h.c,n.c,(1-d/HD)*.25);}}
+    for(const n of nodes){n.r=n.bR+Math.sin(t*n.pS/.012+n.pP)*n.bR*.35;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba('+n.c+','+n.a+')';ctx.fill();if(n.bR>1.8){const gw=ctx.createRadialGradient(n.x,n.y,n.r*.5,n.x,n.y,n.r*2.5);gw.addColorStop(0,'rgba('+n.c+','+(n.a*.3)+')');gw.addColorStop(1,'rgba('+n.c+',0)');ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);ctx.fillStyle=gw;ctx.fill();}n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
+    for(const h of hubs){h.rP+=.008;const rR=h.r+6+Math.sin(h.rP)*4,rA=.08+Math.sin(h.rP)*.05;ctx.beginPath();ctx.arc(h.x,h.y,rR,0,Math.PI*2);ctx.strokeStyle='rgba('+h.c+','+rA+')';ctx.lineWidth=1.2;ctx.stroke();const r2R=h.r+14+Math.sin(h.rP+1)*6;ctx.beginPath();ctx.arc(h.x,h.y,r2R,0,Math.PI*2);ctx.strokeStyle='rgba('+h.c+','+(rA*.5)+')';ctx.lineWidth=1.2;ctx.stroke();const gd=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r*4);gd.addColorStop(0,'rgba('+h.c+',.50)');gd.addColorStop(.4,'rgba('+h.c+',.12)');gd.addColorStop(1,'rgba('+h.c+',0)');ctx.beginPath();ctx.arc(h.x,h.y,h.r*4,0,Math.PI*2);ctx.fillStyle=gd;ctx.fill();ctx.beginPath();ctx.arc(h.x,h.y,h.r,0,Math.PI*2);ctx.fillStyle='rgba('+h.c+',.70)';ctx.fill();const MHD=180;for(const o of hubs){if(o===h)continue;const dx=h.x-o.x,dy=h.y-o.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MHD&&d>0){const f=(MHD-d)/MHD*.04;h.vx+=(dx/d)*f;h.vy+=(dy/d)*f;}}const mV=.5,sp=Math.sqrt(h.vx*h.vx+h.vy*h.vy);if(sp>mV){h.vx=h.vx/sp*mV;h.vy=h.vy/sp*mV;}h.x+=h.vx;h.y+=h.vy;if(h.x<0||h.x>W)h.vx*=-1;if(h.y<0||h.y>H)h.vy*=-1;}
+    requestAnimationFrame(draw);
+  }
+  function startCanvas(){
+    if(animRunning)return;animRunning=true;
+    window.addEventListener('resize',resize);resize();draw();
+  }
+
+  // Video: se ha sorgenti prova a caricare
+  const hasSrc = vid.querySelector('source');
+  if(hasSrc){
+    vid.addEventListener('canplay',function(){
+      vid.classList.add('loaded');
+      dot.style.display='block';
+    },{once:true});
+    vid.addEventListener('error',startCanvas,{once:true});
+    vid.load();
+    setTimeout(function(){ if(!vid.classList.contains('loaded')) startCanvas(); },3000);
+  } else {
+    startCanvas();
+  }
+})();
+</script>
+</body>
+</html>
